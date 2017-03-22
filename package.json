@@ -1,0 +1,8 @@
+{
+  "name": "grello_backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/ShibaScream/grello_backend.git",
+  "author": "Dan Peters <daniel.r.peters@icloud.com>",
+  "license": "MIT"
+}
