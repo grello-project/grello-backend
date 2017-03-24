@@ -2,7 +2,24 @@
   "name": "grello_backend",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "https://github.com/ShibaScream/grello_backend.git",
-  "author": "Dan Peters <daniel.r.peters@icloud.com>",
-  "license": "MIT"
+  "repository": "https://github.com/Grello-Project/grello-backend.git",
+  "author": "",
+  "license": "MIT",
+  "scripts": {
+    "test": "mocha",
+    "start": "node index.js",
+    "lint": "./node_modules/.bin/eslint"
+  },
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "http-errors": "^1.6.1",
+    "mongoose": "^4.9.1",
+    "morgan": "^1.8.1",
+    "superagent": "^3.5.2"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0"
+  }
 }
