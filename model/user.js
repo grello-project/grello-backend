@@ -4,10 +4,10 @@ let mongoose = require('mongoose')
 
 let userSchema = mongoose.Schema({
   googleID: {type: String, required: true, unique: true},
-  username: {type: String, required: true, unique: true},
-  password: {type: String, required: true},
+  name: {type: String, required: true, unique: true},
   email: {type: String, required: true},
   tasks: [{type: mongoose.Schema.Types.ObjectId, ref: 'tasks'}],
+  profilePic: String
 })
 
 module.exports = mongoose.model('users', userSchema)
