@@ -15,6 +15,7 @@ passport.use(new GoogleStrategy({
 },
 function(accessToken, refreshToken, profile, cb) {
   console.log('accessToken', accessToken)
+  console.log('refreshToken', refreshToken)
   console.log('PROFILE', profile)
 
   User.findOne({email: profile.emails[0].value})
@@ -59,7 +60,7 @@ passport.deserializeUser(function(obj, cb) {
 })
 
 router.get('/auth/google',
-  passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/userinfo.profile', 'email', 'https://www.googleapis.com/auth/drive'] }))
+  passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/userinfo.profile', 'email', 'https://www.googleapis.com/auth/drive'], accessType: 'offline'}))
 
 router.get('/auth/google/callback',
   passport.authenticate('google', { successRedirect: '/', failureRedirect: '/login' }),
