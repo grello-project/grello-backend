@@ -2,8 +2,27 @@
   "name": "grello_backend",
   "version": "1.0.0",
   "main": "index.js",
+  "contributors": [
+    { "name" : "Jessica Vasquez-Soltero",
+      "url" : "https://github.com/jessicamvs"
+    },
+    { "name" : "Kyle Winckler",
+      "url" : "https://github.com/kdwinck"
+    },
+    { "name" : "Dan Peters",
+      "url" : "https://github.com/ShibaScream"
+    },
+    { "name" : "Carolina Ceja",
+      "url" : "https://github.com/cejac"
+    },
+    { "name" : "Ron Dunphy",
+      "url" : "https://github.com/Rubiksron"
+    },
+  ],
+  "engines": {
+    "node": "4.4.7"
+  },
   "repository": "https://github.com/Grello-Project/grello-backend.git",
-  "author": "",
   "license": "MIT",
   "scripts": {
     "test": "mocha",
