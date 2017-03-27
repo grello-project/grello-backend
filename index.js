@@ -3,9 +3,12 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const morgan = require('morgan')
+const dotenv = require('dotenv')
 const jsonParser = require('body-parser').json()
 const passport = require('passport')
 const app = express()
+
+dotenv.load()
 
 const errorMiddleware = require('./lib/httpErrors')
 const authRoutes = require('./routes/auth-routes.js')
