@@ -8,7 +8,6 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy
 
 const router = module.exports = new Router()
 
-
 passport.use(new GoogleStrategy({
   clientID: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET,
@@ -39,6 +38,21 @@ function(accessToken, refreshToken, profile, cb) {
       .set('Authorization', `Bearer ${accessToken}`)
       .then(res => {
         console.log('res', res.body.files[0])
+        return Promise.resolve(res.body.files[0].id)
+      })
+      .then(id => {
+        request.get(`https://www.googleapis.com/drive/v3/files/${id}/comments?fields=comments`)
+          .set('Authorization', `Bearer ${accessToken}`)
+          .then(res => {
+            console.log('all comments', res.body.comments.length)
+            let email = profile.emails[0].value
+            return res.body.comments.filter(comment => {
+              let splitContent = comment.content.split(' ')
+              if ((splitContent.indexOf(`+${email}`) !== -1) || (splitContent.indexOf(`@${email}`) !== -1)) return comment
+            })
+          })
+          .then(result => console.log('comments', result))
+          .catch(err => console.error(err))
       })
       .catch(err => {
         console.error(err)
@@ -75,6 +89,6 @@ router.get('/auth/google/callback',
 
     console.log(('REQ.USER', req.user))
     // Successful authentication, redirect home.
-    res.send(`<img src="${req.user.photos[0].value}">`)
-    // res.redirect('/')
+    // res.send(`<img src="${req.user.photos[0].value}">`)
+    res.redirect('https://wattle.io')
   })
