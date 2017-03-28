@@ -25,6 +25,12 @@ app.use(passport.initialize())
 app.use(authRoutes)
 app.use(errorMiddleware)
 
+app.get('/test', (req, res) => {
+  res.json({
+    'msg': 'hello! You have successfully connected to the backend of Wattle.io'
+  })
+})
+
 module.exports = app
 
 if (require.main === module) {
