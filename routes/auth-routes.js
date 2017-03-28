@@ -5,6 +5,7 @@ const Router = require('express').Router
 const passport = require('passport')
 const User = require('../model/user.js')
 const GoogleStrategy = require('passport-google-oauth20').Strategy
+const getFiles = require('../lib/files.js')
 
 const router = module.exports = new Router()
 
@@ -34,29 +35,33 @@ function(accessToken, refreshToken, profile, cb) {
     return Promise.reject(err)
   })
   .then(() => {
-    request.get('https://www.googleapis.com/drive/v3/files')
-      .set('Authorization', `Bearer ${accessToken}`)
-      .then(res => {
-        console.log('res', res.body.files[0])
-        return Promise.resolve(res.body.files[0].id)
-      })
-      .then(id => {
-        request.get(`https://www.googleapis.com/drive/v3/files/${id}/comments?fields=comments`)
-          .set('Authorization', `Bearer ${accessToken}`)
-          .then(res => {
-            console.log('all comments', res.body.comments.length)
-            let email = profile.emails[0].value
-            return res.body.comments.filter(comment => {
-              let splitContent = comment.content.split(' ')
-              if ((splitContent.indexOf(`+${email}`) !== -1) || (splitContent.indexOf(`@${email}`) !== -1)) return comment
-            })
-          })
-          .then(result => console.log('comments', result))
-          .catch(err => console.error(err))
-      })
-      .catch(err => {
-        console.error(err)
-      })
+    return getFiles(accessToken)
+  .then(file => {
+    console.log('WE HERE', file)
+  })
+    // request.get('https://www.googleapis.com/drive/v3/files')
+    //   .set('Authorization', `Bearer ${accessToken}`)
+    //   .then(res => {
+    //     console.log('res', res.body.files[0])
+    //     return Promise.resolve(res.body.files[0].id)
+    //   })
+    //   .then(id => {
+    //     request.get(`https://www.googleapis.com/drive/v3/files/${id}/comments?fields=comments`)
+    //       .set('Authorization', `Bearer ${accessToken}`)
+    //       .then(res => {
+    //         console.log('all comments', res.body.comments.length)
+    //         let email = profile.emails[0].value
+    //         return res.body.comments.filter(comment => {
+    //           let splitContent = comment.content.split(' ')
+    //           if ((splitContent.indexOf(`+${email}`) !== -1) || (splitContent.indexOf(`@${email}`) !== -1)) return comment
+    //         })
+    //       })
+    //       .then(result => console.log('comments', result))
+    //       .catch(err => console.error(err))
+    //   })
+    //   .catch(err => {
+    //     console.error(err)
+    //   })
   })
 
   return cb(null, profile)
