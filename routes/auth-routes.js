@@ -36,9 +36,7 @@ function(accessToken, refreshToken, profile, cb) {
   })
   .then(() => {
     return getFiles(accessToken)
-  .then(file => {
-    console.log('WE HERE', file)
-  })
+
     // request.get('https://www.googleapis.com/drive/v3/files')
     //   .set('Authorization', `Bearer ${accessToken}`)
     //   .then(res => {
@@ -62,6 +60,9 @@ function(accessToken, refreshToken, profile, cb) {
     //   .catch(err => {
     //     console.error(err)
     //   })
+  })
+  .catch(err => {
+    console.log('ERROEROROROR', err)
   })
 
   return cb(null, profile)
