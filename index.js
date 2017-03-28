@@ -35,6 +35,6 @@ module.exports = app
 
 if (require.main === module) {
   app.listen(PORT, () => {
-    console.log('lisenting on PORT', PORT)
+    console.log('listening on PORT', PORT)
   })
 }
