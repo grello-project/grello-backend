@@ -30,6 +30,7 @@ module.exports = {
     production : {
       user : 'ec2-user',
       host : 'ec2-52-11-133-170.us-west-2.compute.amazonaws.com',
+      key  : '~/.aws/wattle-be.pem',
       ref  : 'origin/master',
       repo : 'git@github.com:grello-project/grello-backend.git',
       path : '~/grello-backend',
