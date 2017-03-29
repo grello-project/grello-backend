@@ -1,19 +1,22 @@
 'use strict'
 
+const dotenv = require('dotenv')
+dotenv.load()
+
 const express = require('express')
 const mongoose = require('mongoose')
-const morgan = require('morgan')
-const dotenv = require('dotenv')
 const jsonParser = require('body-parser').json()
+const app = express()
+
 const passport = require('passport')
 require('./lib/passport.js')(passport)
-const app = express()
+
+const morgan = require('morgan')
 const fs = require('fs')
 const path = require('path')
 const rfs = require('rotating-file-stream')
 const logDirectory = path.join(__dirname, 'log')
 let morganLogs = null
-dotenv.load()
 
 // taken from https://github.com/expressjs/morgan docs
 // ensure log directory exists
