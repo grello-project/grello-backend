@@ -3,20 +3,25 @@
   "version": "1.0.0",
   "main": "index.js",
   "contributors": [
-    { "name" : "Jessica Vasquez-Soltero",
-      "url" : "https://github.com/jessicamvs"
+    {
+      "name": "Jessica Vasquez-Soltero",
+      "url": "https://github.com/jessicamvs"
     },
-    { "name" : "Kyle Winckler",
-      "url" : "https://github.com/kdwinck"
+    {
+      "name": "Kyle Winckler",
+      "url": "https://github.com/kdwinck"
     },
-    { "name" : "Dan Peters",
-      "url" : "https://github.com/ShibaScream"
+    {
+      "name": "Dan Peters",
+      "url": "https://github.com/ShibaScream"
     },
-    { "name" : "Carolina Ceja",
-      "url" : "https://github.com/cejac"
+    {
+      "name": "Carolina Ceja",
+      "url": "https://github.com/cejac"
     },
-    { "name" : "Ron Dunphy",
-      "url" : "https://github.com/Rubiksron"
+    {
+      "name": "Ron Dunphy",
+      "url": "https://github.com/Rubiksron"
     }
   ],
   "engines": {
@@ -27,7 +32,8 @@
   "scripts": {
     "test": "mocha",
     "start": "node index.js",
-    "lint": "./node_modules/.bin/eslint ."
+    "lint": "./node_modules/.bin/eslint .",
+    "deploy": "pm2 deploy ecosystem.config.json production"
   },
   "dependencies": {
     "body-parser": "^1.17.1",
@@ -46,6 +52,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "mocha": "^3.2.0"
+    "mocha": "^3.2.0",
+    "pm2": "^2.4.2"
   }
 }
