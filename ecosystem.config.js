@@ -33,7 +33,7 @@ module.exports = {
       key  : '~/.aws/wattle-be.pem',
       ref  : 'origin/master',
       repo : 'git@github.com:grello-project/grello-backend.git',
-      path : '~/grello-backend',
+      path : '/home/ec2-user/grello-backend',
       'post-deploy' : 'npm install && pm2 startOrRestart ecosystem.config.js --env production'
     }
   }
