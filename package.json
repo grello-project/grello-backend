@@ -33,7 +33,7 @@
     "test": "mocha",
     "start": "node index.js",
     "lint": "./node_modules/.bin/eslint .",
-    "deploy": "pm2 deploy ecosystem.config.json production"
+    "deploy": "pm2 deploy ecosystem.config.js production"
   },
   "dependencies": {
     "body-parser": "^1.17.1",
