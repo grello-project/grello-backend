@@ -6,11 +6,26 @@ const morgan = require('morgan')
 const dotenv = require('dotenv')
 const jsonParser = require('body-parser').json()
 const passport = require('passport')
+require('./lib/passport.js')(passport)
 const app = express()
-
+const fs = require('fs')
+const path = require('path')
+const rfs = require('rotating-file-stream')
+const logDirectory = path.join(__dirname, 'log')
+let morganLogs = null
 dotenv.load()
 
-const errorMiddleware = require('./lib/httpErrors')
+// taken from https://github.com/expressjs/morgan docs
+// ensure log directory exists
+fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
+
+// create a rotating file stream with daily rotation of logs
+let accessLogStream = rfs('access.log', {
+  interval: '1d',
+  path: logDirectory
+})
+
+const errorMiddleware = require('./lib/error-middleware.js')
 const authRoutes = require('./routes/auth-routes.js')
 
 const PORT = process.env.PORT || 3000
@@ -19,7 +34,15 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/grello'
 mongoose.connect(MONGODB_URI)
 mongoose.Promise = Promise //what does this do?
 
-app.use(morgan('dev'))
+
+if (process.env.PRODUCTION) {
+  // using 'combined' APACHE-like logs written to disk for production server
+  morganLogs = morgan('combined', {stream: accessLogStream})
+} else {
+  morganLogs = morgan('dev')
+}
+app.use(morganLogs)
+
 app.use(jsonParser)
 app.use(passport.initialize())
 app.use(authRoutes)
@@ -35,6 +58,6 @@ module.exports = app
 
 if (require.main === module) {
   app.listen(PORT, () => {
-    console.log('listening on PORT', PORT)
+    if (!process.env.PRODUCTION) console.log('listening on PORT', PORT)
   })
 }
