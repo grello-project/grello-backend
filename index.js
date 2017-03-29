@@ -5,8 +5,6 @@ const mongoose = require('mongoose')
 const morgan = require('morgan')
 const dotenv = require('dotenv')
 const jsonParser = require('body-parser').json()
-const passport = require('passport')
-require('./lib/passport.js')(passport)
 const app = express()
 const fs = require('fs')
 const path = require('path')
@@ -42,9 +40,7 @@ if (process.env.PRODUCTION) {
   morganLogs = morgan('dev')
 }
 app.use(morganLogs)
-
 app.use(jsonParser)
-app.use(passport.initialize())
 app.use(authRoutes)
 app.use(errorMiddleware)
 
