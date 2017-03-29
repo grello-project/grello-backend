@@ -45,7 +45,6 @@ router.get('/auth/google/callback', googleOAUTH, (req, res, next) => {
       }
       user = new User(userData).save()
     }
-
     return Promise.resolve(user)
   })
   .then(user => {
