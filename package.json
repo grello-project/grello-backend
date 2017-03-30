@@ -3,20 +3,25 @@
   "version": "1.0.0",
   "main": "index.js",
   "contributors": [
-    { "name" : "Jessica Vasquez-Soltero",
-      "url" : "https://github.com/jessicamvs"
+    {
+      "name": "Jessica Vasquez-Soltero",
+      "url": "https://github.com/jessicamvs"
     },
-    { "name" : "Kyle Winckler",
-      "url" : "https://github.com/kdwinck"
+    {
+      "name": "Kyle Winckler",
+      "url": "https://github.com/kdwinck"
     },
-    { "name" : "Dan Peters",
-      "url" : "https://github.com/ShibaScream"
+    {
+      "name": "Dan Peters",
+      "url": "https://github.com/ShibaScream"
     },
-    { "name" : "Carolina Ceja",
-      "url" : "https://github.com/cejac"
+    {
+      "name": "Carolina Ceja",
+      "url": "https://github.com/cejac"
     },
-    { "name" : "Ron Dunphy",
-      "url" : "https://github.com/Rubiksron"
+    {
+      "name": "Ron Dunphy",
+      "url": "https://github.com/Rubiksron"
     }
   ],
   "engines": {
@@ -36,6 +41,7 @@
     "express": "^4.15.2",
     "fs": "^0.0.1-security",
     "http-errors": "^1.6.1",
+    "jsonwebtoken": "^7.3.0",
     "mongoose": "^4.9.1",
     "morgan": "^1.8.1",
     "passport": "^0.3.2",
