@@ -18,6 +18,8 @@ const rfs = require('rotating-file-stream')
 const logDirectory = path.join(__dirname, 'log')
 let morganLogs = null
 
+const production = process.env.NODE_ENV === 'production'
+
 // taken from https://github.com/expressjs/morgan docs
 // ensure log directory exists
 fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
@@ -38,7 +40,7 @@ mongoose.connect(MONGODB_URI)
 mongoose.Promise = Promise //what does this do?
 
 
-if (process.env.PRODUCTION) {
+if (production) {
   // using 'combined' APACHE-like logs written to disk for production server
   morganLogs = morgan('combined', {stream: accessLogStream})
 } else {
@@ -61,6 +63,6 @@ module.exports = app
 
 if (require.main === module) {
   app.listen(PORT, () => {
-    if (!process.env.PRODUCTION) console.log('listening on PORT', PORT)
+    if (!production) console.log('listening on PORT', PORT)
   })
 }
