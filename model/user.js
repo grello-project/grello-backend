@@ -9,6 +9,7 @@ let userSchema = mongoose.Schema({
   email: {type: String, required: true},
   documents: [{type: String, ref: 'documents'}],
   tasks: [{type: mongoose.Schema.Types.ObjectId, ref: 'tasks'}],
+  tags: [{type: mongoose.Schema.Types.ObjectId, ref: 'tags'}],
   profilePic: String,
   refreshToken: String,
   accessToken: String,
