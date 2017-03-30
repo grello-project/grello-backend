@@ -2,7 +2,7 @@
 
 const Router = require('express').Router
 const googleOAUTH = require('../lib/google-oauth-middleware.js')
-const files = require('../lib/files.js')
+const getFiles = require('../lib/files.js')
 const User = require('../model/user.js')
 
 const router = module.exports = new Router()
@@ -49,9 +49,11 @@ router.get('/auth/google/callback', googleOAUTH, (req, res, next) => {
   })
   .then(user => {
     console.log('THIS IS USE FROM AUTH ROUTES', user)
-    files(user)
-    // probably shouldnt be returning the users accessToken?
-    res.json(user.accessToken)
+    getFiles(user)
+    return user.generateToken()
+  })
+  .then(token => {
+    res.redirect(`http://wattle.io/?token=${token}`)
   })
   .catch(next)
 })
