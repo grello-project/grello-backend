@@ -53,7 +53,7 @@ app.use(errorMiddleware)
 
 app.get('/test', (req, res) => {
   res.json({
-    'msg': 'hello! You have successfully connected to the backend of Wattle.io'
+    'msg': 'hello! things are working great with Wattle.io'
   })
 })
 
