@@ -1,18 +1,57 @@
 'use strict'
 
 const Router = require('express').Router
-const passport = require('passport')
+const googleOAUTH = require('../lib/google-oauth-middleware.js')
+const files = require('../lib/files.js')
+const User = require('../model/user.js')
 
 const router = module.exports = new Router()
 
-router.get('/auth/google',
-  passport.authenticate('google', { scope: ['profile', 'email', 'https://www.googleapis.com/auth/drive'], accessType: 'offline'}))
+router.get('/auth/google', (req, res) => {
+  console.log('MEOW /AUTH/GOOGLE')
+  const googleAuthBase = 'https://accounts.google.com/o/oauth2/v2/auth'
+  const googleAuthResponseType = 'response_type=code'
+  const googleAuthClientID = `client_id=${process.env.CLIENT_ID}`
+  const googleAuthScope = 'scope=profile%20email%20openid%20https://www.googleapis.com/auth/drive'
+  const googleAuthRedirectURI = 'redirect_uri=http://localhost:3000/auth/google/callback'
+  const googleAuthAccessType = 'access_type=offline'
+  const googleAuthPrompt = 'prompt=consent'
 
-router.get('/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: '/login' }),
-  function(req, res) {
+  const googleAuthURL = `${googleAuthBase}?${googleAuthResponseType}&${googleAuthClientID}&${googleAuthScope}&${googleAuthRedirectURI}&${googleAuthAccessType}&${googleAuthPrompt}`
 
-    console.log('WE ARE IN AUTH GOOGLE/CALLBACK')
-    console.log('USER TO TOTOTOTO', req.user)
-    res.redirect('https://wattle.io')
+  res.redirect(googleAuthURL)
+})
+
+router.get('/auth/google/callback', googleOAUTH, (req, res, next) => {
+  console.log('MEOW /auth/google/callback')
+
+  // if googleError deal with google Error
+  if(req.googleError){
+    return res.redirect('/')
+  }
+
+  User.findOne({email: req.googleOAUTH.email})
+  .then(user => {
+    if (!user) {
+      let userData = {
+        googleID: req.googleOAUTH.googleID,
+        name: req.googleOAUTH.name,
+        email: req.googleOAUTH.email,
+        profilePic: req.googleOAUTH.profilePic,
+        accessToken: req.googleOAUTH.accessToken,
+        refreshToken: req.googleOAUTH.refreshToken,
+        tokenTTL: req.googleOAUTH.tokenTTL,
+        tokenTimestamp: Date.now()
+      }
+      user = new User(userData).save()
+    }
+    return Promise.resolve(user)
   })
+  .then(user => {
+    console.log('THIS IS USE FROM AUTH ROUTES', user)
+    files(user)
+    // probably shouldnt be returning the users accessToken?
+    res.json(user.accessToken)
+  })
+  .catch(next)
+})
