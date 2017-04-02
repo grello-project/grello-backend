@@ -4,7 +4,7 @@ let mongoose = require('mongoose')
 
 let categorySchema = mongoose.Schema({
   name: {type: String, required: true},
-  tasks: [{type: mongoose.Schema.Types.ObjectId, ref: 'tasks'}],
+  user: {type: mongoose.Schema.Types.ObjectId, ref: 'users'}
 })
 
 module.exports = mongoose.model('categories', categorySchema)

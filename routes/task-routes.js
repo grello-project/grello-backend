@@ -1,8 +1,8 @@
 'use strict'
 
-let User = require('../model/user.js')
-let Task = require('../model/task.js')
-let bearerAuth = require('../lib/bearer-auth-middleware')
+const User = require('../model/user.js')
+const Task = require('../model/task.js')
+const bearerAuth = require('../lib/bearer-auth-middleware')
 
 const Router = require('express').Router
 
