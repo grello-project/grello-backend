@@ -1,6 +1,5 @@
 'use strict'
 
-// const User = require('../model/user.js')
 const Task = require('../model/task.js')
 const bearerAuth = require('../lib/bearer-auth-middleware')
 
@@ -10,7 +9,6 @@ const router = module.exports = new Router()
 
 router.get('/api/tasks', bearerAuth, (req, res, next) => {
   Task.find({userID: req.user._id})
-  // .populate('tasks')
   .then(tasks => res.json(tasks))
   .catch(next)
 })
