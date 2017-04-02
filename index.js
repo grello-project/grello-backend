@@ -25,6 +25,8 @@ let accessLogStream = rfs('access.log', {
 
 const errorMiddleware = require('./lib/error-middleware.js')
 const authRoutes = require('./routes/auth-routes.js')
+const taskRoutes = require('./routes/task-routes')
+const categoryRoutes = require('./routes/category-routes')
 
 const PORT = process.env.PORT || 3000
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/grello'
@@ -42,6 +44,8 @@ if (process.env.PRODUCTION) {
 app.use(morganLogs)
 app.use(jsonParser)
 app.use(authRoutes)
+app.use(taskRoutes)
+app.use(categoryRoutes)
 app.use(errorMiddleware)
 
 app.get('/test', (req, res) => {

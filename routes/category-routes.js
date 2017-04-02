@@ -30,19 +30,9 @@ router.put('/api/categories/:id', bearerAuth, (req, res, next) => {
 })
 
 router.delete('/api/categories/:id', bearerAuth, (req, res, next) => {
-  Category.findByIdAndRemove(req.params.id)
-  .then(() => Task.find({category: req.params.id}))
-  .then(tasks => {
-    tasks.forEach(task => {
-      Category.findOne({name: 'uncategorized', user: req.user._id})
-      .then(category => {
-        task.category = category.id
-        task.save()
-      })
-    })
-
-    return
-  })
+  Category.findOne({name: 'uncategorized', user: req.user._id})
+  .then(category => Task.update({category: req.params.id}, {category: category._id}, {multi: true}))
+  .then(() => Category.findByIdAndRemove(req.params.id))
   .then(() => res.status(204).end())
   .catch(next)
 })

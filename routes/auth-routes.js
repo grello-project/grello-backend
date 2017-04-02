@@ -48,12 +48,12 @@ router.get('/auth/google/callback', googleOAUTH, (req, res, next) => {
     return Promise.resolve(user)
   })
   .then(user => {
-    console.log('THIS IS USE FROM AUTH ROUTES', user)
-    getFiles(user)
-    return user.generateToken()
+    return getFiles(user)
   })
+  .then(user => user.generateToken())
   .then(token => {
-    res.redirect(`http://wattle.io/?token=${token}`)
+    console.log(token)
+    res.redirect(`https://wattle.io/?token=${token}`)
   })
   .catch(next)
 })
