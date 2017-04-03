@@ -117,5 +117,27 @@ describe('Testing Category Routes', function() {
     })
   })
 
-  // describe('')
+  describe('GET', () => {
+
+    it('should return an array of categories', done => {
+      request
+        .get(`${url}/api/categories`)
+        .set('Authorization', `Bearer ${this.tempUser.token}`)
+        .end((err, res) => {
+          expect(res.status).to.equal(200)
+          expect(Array.isArray(res.body)).to.equal(true)
+          expect(res.body[0].name).to.equal(this.tempCategory.name)
+          done()
+        })
+    })
+    it('should respond 401 if no Auth header', done => {
+      request
+        .get(`${url}/api/categories`)
+        .end((err, res) => {
+          expect(res.status).to.equal(401)
+          expect(res.text).to.equal('UnauthorizedError')
+          done()
+        })
+    })
+  })
 })
