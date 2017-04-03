@@ -68,7 +68,7 @@ describe('Testing Category Routes', function() {
       .post(`${url}/api/categories`)
       .set('Authorization', `Bearer ${this.tempUser.token}`)
       .send(mockCategory)
-      .end((err, res)=> {
+      .end((err, res) => {
         expect(res.status).to.equal(200)
         expect(res.body.name).to.equal(this.tempCategory.name)
         expect(res.body.user).to.equal(this.tempUser._id.toString())
@@ -82,6 +82,36 @@ describe('Testing Category Routes', function() {
         .end((err, res) => {
           expect(res.status).to.equal(401)
           expect(res.text).to.equal('UnauthorizedError')
+          done()
+        })
+    })
+    it('should respond 401 if no Token', done => {
+      request
+        .post(`${url}/api/categories`)
+        .set('Authorization', 'Bearer')
+        .end((err, res) => {
+          expect(res.status).to.equal(401)
+          expect(res.text).to.equal('UnauthorizedError')
+          done()
+        })
+    })
+    it('should respond 401 if not Bearer', done => {
+      request
+        .post(`${url}/api/categories`)
+        .set('Authorization', 'Basic token')
+        .end((err, res) => {
+          expect(res.status).to.equal(401)
+          expect(res.text).to.equal('UnauthorizedError')
+          done()
+        })
+    })
+    it('should do something with no body', done => {
+      request
+        .post(`${url}/api/categories`)
+        .set('Authorization', `Bearer ${this.tempUser.token}`)
+        .end((err, res) => {
+          expect(res.status).to.equal(400)
+          expect(res.text).to.equal('BadRequestError')
           done()
         })
     })
