@@ -26,14 +26,18 @@ const mockTag = {
 describe('tag routes', function() {
   let server
 
-  before(done => {
+  beforeEach(done => {
 
-    server = app.listen(PORT, () => console.log('started server'))
+    server = app.listen(PORT)
 
     new User(mockUser).save()
       .then(user => {
         this.tempUser = user
         return new Tag(mockTag).save()
+      })
+      .then(tag => {
+        tag.user = this.tempUser._id
+        return tag.save()
       })
       .then(tag => {
         this.tempTag = tag
@@ -47,53 +51,109 @@ describe('tag routes', function() {
       .catch(done)
   })
 
-  after(done => {
+  afterEach(done => {
     User.remove({})
-    .then(() => Tag.remove())
+    .then(() => Tag.remove({}))
     .then(() => {
-      server.close(() => console.log('server closed after tag tests'))
+      server.close()
       done()
     })
     .catch(done)
   })
 
   describe('testing POST route',() => {
+
+    after(done => {
+      Tag.remove({})
+        .then(() => done())
+        .catch(done)
+    })
+
     it('should create a new tag', done => {
-      request.post(`${url}/api/tags`)
-      .set('Authorization', `Bearer ${this.tempUser.token}`)
-      .send(mockTag)
-      .end((err, res) => {
-        expect(res.status).to.equal(200)
-        expect(res.body.name).to.equal(this.tempTag.name)
-        expect(res.body.user).to.equal(this.tempUser._id.toString())
-        done()
-      })
+      request
+        .post(`${url}/api/tags`)
+        .set('Authorization', `Bearer ${this.tempUser.token}`)
+        .send(mockTag)
+        .end((err, res) => {
+          expect(res.status).to.equal(200)
+          expect(res.body.name).to.equal(this.tempTag.name)
+          expect(res.body.user).to.equal(this.tempUser._id.toString())
+          done()
+        })
     })
     it('should respond 401 if no Auth header', done => {
-      request.post(`${url}/api/tags`)
-      .end((err, res) => {
-        expect(res.status).to.equal(401)
-        expect(res.text).to.equal('UnauthorizedError')
-        done()
-      })
+      request
+        .post(`${url}/api/tags`)
+        .end((err, res) => {
+          expect(res.status).to.equal(401)
+          expect(res.text).to.equal('UnauthorizedError')
+          done()
+        })
     })
     it('should responed 401 if no Token', done => {
-      request.post(`${url}/api/tags`)
-      .send('Authorization', 'Bearer')
-      .end((err, res) => {
-        expect(res.status).to.equal(401)
-        expect(res.text).to.equal('UnauthorizedError')
-        done()
-      })
+      request
+        .post(`${url}/api/tags`)
+        .set('Authorization', 'Bearer')
+        .end((err, res) => {
+          expect(res.status).to.equal(401)
+          expect(res.text).to.equal('UnauthorizedError')
+          done()
+        })
     })
     it('should responed 401 if not Bearer', done => {
-      request.post(`${url}/api/tags`)
-      .send('Authorization', 'Basic token')
-      .end((err, res) => {
-        expect(res.status).to.equal(401)
-        expect(res.text).to.equal('UnauthorizedError')
-        done()
-      })
+      request
+        .post(`${url}/api/tags`)
+        .set('Authorization', 'Basic token')
+        .end((err, res) => {
+          expect(res.status).to.equal(401)
+          expect(res.text).to.equal('UnauthorizedError')
+          done()
+        })
     })
+  })
+
+  describe('testing GET route', () => {
+
+    it('should return an array of tags', done => {
+      request
+        .get(`${url}/api/tags`)
+        .set('Authorization', `Bearer ${this.tempUser.token}`)
+        .end((err, res) => {
+          expect(res.status).to.equal(200)
+          expect(Array.isArray(res.body)).to.equal(true)
+          expect(res.body[0].name).to.equal(this.tempTag.name)
+          done()
+        })
+    })
+    it('should respond 401 if no Auth header', done => {
+      request
+        .get(`${url}/api/tags`)
+        .end((err, res) => {
+          expect(res.status).to.equal(401)
+          expect(res.text).to.equal('UnauthorizedError')
+          done()
+        })
+    })
+    it('should responed 401 if no Token', done => {
+      request
+        .get(`${url}/api/tags`)
+        .set('Authorization', 'Bearer')
+        .end((err, res) => {
+          expect(res.status).to.equal(401)
+          expect(res.text).to.equal('UnauthorizedError')
+          done()
+        })
+    })
+    it('should responed 401 if not Bearer', done => {
+      request
+        .get(`${url}/api/tags`)
+        .set('Authorization', 'Basic token')
+        .end((err, res) => {
+          expect(res.status).to.equal(401)
+          expect(res.text).to.equal('UnauthorizedError')
+          done()
+        })
+    })
+
   })
 })
