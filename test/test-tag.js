@@ -104,6 +104,16 @@ describe('Testing Tag Routes', function() {
           done()
         })
     })
+    it('should do something with no body', done => {
+      request
+        .post(`${url}/api/tags`)
+        .set('Authorization', `Bearer ${this.tempUser.token}`)
+        .end((err, res) => {
+          expect(res.status).to.equal(400)
+          expect(res.text).to.equal('BadRequestError')
+          done()
+        })
+    })
   })
 
   describe('GET', () => {
