@@ -139,5 +139,25 @@ describe('Testing Category Routes', function() {
           done()
         })
     })
+    it('should respond 401 if no Token', done => {
+      request
+        .get(`${url}/api/categories`)
+        .set('Authorization', 'Bearer')
+        .end((err, res) => {
+          expect(res.status).to.equal(401)
+          expect(res.text).to.equal('UnauthorizedError')
+          done()
+        })
+    })
+    it('should respond 401 if not Bearer', done => {
+      request
+        .get(`${url}/api/categories`)
+        .set('Authorization', 'Basic token')
+        .end((err, res) => {
+          expect(res.status).to.equal(401)
+          expect(res.text).to.equal('UnauthorizedError')
+          done()
+        })
+    })
   })
 })
