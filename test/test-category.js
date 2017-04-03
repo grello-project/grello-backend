@@ -160,4 +160,32 @@ describe('Testing Category Routes', function() {
         })
     })
   })
+
+  describe('PUT', () => {
+
+    it('should return an updated category', done => {
+      request
+        .put(`${url}/api/categories/${this.tempCategory._id}`)
+        .set('Authorization', `Bearer ${this.tempUser.token}`)
+        .send({name: 'updated name'})
+        .end((err, res) => {
+          expect(res.status).to.equal(200)
+          expect(res.body.name).to.equal('updated name')
+          done()
+        })
+    })
+  })
+
+  describe('DELETE', () => {
+
+    it('should delete a category', done => {
+      request
+        .delete(`${url}/api/categories/${this.tempCategory._id}`)
+        .set('Authorization', `Bearer ${this.tempUser.token}`)
+        .end((err, res) => {
+          expect(res.status).to.equal(204)
+          done()
+        })
+    })
+  })
 })
