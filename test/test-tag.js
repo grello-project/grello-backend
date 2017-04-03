@@ -23,7 +23,7 @@ const mockTag = {
   name: 'test tag'
 }
 
-describe('tag routes', function() {
+describe('Testing Tag Routes', function() {
   let server
 
   beforeEach(done => {
@@ -61,13 +61,7 @@ describe('tag routes', function() {
     .catch(done)
   })
 
-  describe('testing POST route',() => {
-
-    after(done => {
-      Tag.remove({})
-        .then(() => done())
-        .catch(done)
-    })
+  describe('POST', () => {
 
     it('should create a new tag', done => {
       request
@@ -90,7 +84,7 @@ describe('tag routes', function() {
           done()
         })
     })
-    it('should responed 401 if no Token', done => {
+    it('should respond 401 if no Token', done => {
       request
         .post(`${url}/api/tags`)
         .set('Authorization', 'Bearer')
@@ -100,7 +94,7 @@ describe('tag routes', function() {
           done()
         })
     })
-    it('should responed 401 if not Bearer', done => {
+    it('should respond 401 if not Bearer', done => {
       request
         .post(`${url}/api/tags`)
         .set('Authorization', 'Basic token')
@@ -112,7 +106,7 @@ describe('tag routes', function() {
     })
   })
 
-  describe('testing GET route', () => {
+  describe('GET', () => {
 
     it('should return an array of tags', done => {
       request
@@ -134,7 +128,7 @@ describe('tag routes', function() {
           done()
         })
     })
-    it('should responed 401 if no Token', done => {
+    it('should respond 401 if no Token', done => {
       request
         .get(`${url}/api/tags`)
         .set('Authorization', 'Bearer')
@@ -144,7 +138,7 @@ describe('tag routes', function() {
           done()
         })
     })
-    it('should responed 401 if not Bearer', done => {
+    it('should respond 401 if not Bearer', done => {
       request
         .get(`${url}/api/tags`)
         .set('Authorization', 'Basic token')
@@ -154,6 +148,20 @@ describe('tag routes', function() {
           done()
         })
     })
+  })
 
+  describe('PUT', () => {
+
+    it('should return an updated tag', done => {
+      request
+        .put(`${url}/api/tags/${this.tempTag._id}`)
+        .set('Authorization', `Bearer ${this.tempUser.token}`)
+        .send({name: 'updated name'})
+        .end((err, res) => {
+          expect(res.status).to.equal(200)
+          expect(res.body.name).to.equal('updated name')
+          done()
+        })
+    })
   })
 })
