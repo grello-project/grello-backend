@@ -26,7 +26,7 @@ describe('testing task routes', function() {
   let server
 
   beforeEach(done => {
-    server = app.listen(PORT, () => console.log('started server from student tests'))
+    server = app.listen(PORT, () => console.log('started server from user tests'))
 
     new User(mockUser).save()
       .then(user => {
@@ -50,7 +50,7 @@ describe('testing task routes', function() {
     User.remove()
     .then(() => Task.remove())
     .then(() => {
-      server.close(() => console.log('server closed after task tests'))
+      server.close(() => console.log('server closed after user tests'))
       done()
     })
     .catch(done)
