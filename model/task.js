@@ -4,6 +4,7 @@ let mongoose = require('mongoose')
 
 let taskSchema = mongoose.Schema({
   googleID: {type: String, required: true, unique: true},
+  priority: Number,
   project: {type: mongoose.Schema.Types.ObjectId, ref: 'projects'},
   author: {type: String, required: true},
   category: {type: mongoose.Schema.Types.ObjectId, ref: 'categories'},
