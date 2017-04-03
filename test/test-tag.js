@@ -164,4 +164,17 @@ describe('Testing Tag Routes', function() {
         })
     })
   })
+
+  describe('DELETE', () => {
+
+    it('should delete a tag', done => {
+      request
+        .delete(`${url}/api/tags/${this.tempTag._id}`)
+        .set('Authorization', `Bearer ${this.tempUser.token}`)
+        .end((err, res) => {
+          expect(res.status).to.equal(204)
+          done()
+        })
+    })
+  })
 })
