@@ -48,7 +48,7 @@ describe('testing auth routes', function() {
     })
   })
 
-  describe.only('testing GET /auth/google/callback', () => {
+  describe('testing GET /auth/google/callback', () => {
     it('should redirect user', done => {
       request
       .get(`${API_URL}/auth/google/callback`)
