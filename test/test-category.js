@@ -5,7 +5,8 @@ const request = require('superagent')
 const expect = require('chai').expect
 
 const User = require('../model/user')
-const Tag = require('../model/tag')
+const Category = require('../model/category')
+const Task = require('../model/task')
 
 const PORT = process.env.PORT || 3000
 
@@ -17,28 +18,34 @@ const mockUser = {
   email: 'test@test.com'
 }
 
-const mockTag = {
-  name: 'test tag'
+const mockCategory = {
+  name: 'test category'
 }
 
-describe('Testing Tag Routes', function() {
+const mockTask = {
+  googleID: 'imatask12345',
+  author: 'I ARE AUTHOR',
+  comment: 'meow time! dogs suck!'
+}
+
+describe('Testing Category Routes', function() {
   let server
 
-  beforeEach(done => {
+  before(done => {
 
     server = app.listen(PORT)
 
     new User(mockUser).save()
       .then(user => {
         this.tempUser = user
-        return new Tag(mockTag).save()
+        return new Category(mockCategory).save()
       })
-      .then(tag => {
-        tag.user = this.tempUser._id
-        return tag.save()
+      .then(category => {
+        category.user = this.tempUser._id
+        return category.save()
       })
-      .then(tag => {
-        this.tempTag = tag
+      .then(category => {
+        this.tempCategory = category
         return this.tempUser.save()
       })
       .then(user => user.generateToken())
@@ -49,9 +56,9 @@ describe('Testing Tag Routes', function() {
       .catch(done)
   })
 
-  afterEach(done => {
+  after(done => {
     User.remove({})
-    .then(() => Tag.remove({}))
+    .then(() => Category.remove({}))
     .then(() => {
       server.close()
       done()
@@ -61,21 +68,22 @@ describe('Testing Tag Routes', function() {
 
   describe('POST', () => {
 
-    it('should create a new tag', done => {
+    it('should create a new category', done => {
       request
-        .post(`${url}/api/tags`)
-        .set('Authorization', `Bearer ${this.tempUser.token}`)
-        .send(mockTag)
-        .end((err, res) => {
-          expect(res.status).to.equal(200)
-          expect(res.body.name).to.equal(this.tempTag.name)
-          expect(res.body.user).to.equal(this.tempUser._id.toString())
-          done()
-        })
+      .post(`${url}/api/categories`)
+      .set('Authorization', `Bearer ${this.tempUser.token}`)
+      .send(mockCategory)
+      .end((err, res) => {
+        expect(res.status).to.equal(200)
+        expect(res.body.name).to.equal(this.tempCategory.name)
+        expect(res.body.user).to.equal(this.tempUser._id.toString())
+        done()
+      })
     })
     it('should respond 401 if no Auth header', done => {
       request
-        .post(`${url}/api/tags`)
+        .post(`${url}/api/categories`)
+        .send(mockCategory)
         .end((err, res) => {
           expect(res.status).to.equal(401)
           expect(res.text).to.equal('UnauthorizedError')
@@ -84,7 +92,7 @@ describe('Testing Tag Routes', function() {
     })
     it('should respond 401 if no Token', done => {
       request
-        .post(`${url}/api/tags`)
+        .post(`${url}/api/categories`)
         .set('Authorization', 'Bearer')
         .end((err, res) => {
           expect(res.status).to.equal(401)
@@ -94,7 +102,7 @@ describe('Testing Tag Routes', function() {
     })
     it('should respond 401 if not Bearer', done => {
       request
-        .post(`${url}/api/tags`)
+        .post(`${url}/api/categories`)
         .set('Authorization', 'Basic token')
         .end((err, res) => {
           expect(res.status).to.equal(401)
@@ -104,7 +112,7 @@ describe('Testing Tag Routes', function() {
     })
     it('should do something with no body', done => {
       request
-        .post(`${url}/api/tags`)
+        .post(`${url}/api/categories`)
         .set('Authorization', `Bearer ${this.tempUser.token}`)
         .end((err, res) => {
           expect(res.status).to.equal(400)
@@ -116,20 +124,20 @@ describe('Testing Tag Routes', function() {
 
   describe('GET', () => {
 
-    it('should return an array of tags', done => {
+    it('should return an array of categories', done => {
       request
-        .get(`${url}/api/tags`)
+        .get(`${url}/api/categories`)
         .set('Authorization', `Bearer ${this.tempUser.token}`)
         .end((err, res) => {
           expect(res.status).to.equal(200)
           expect(Array.isArray(res.body)).to.equal(true)
-          expect(res.body[0].name).to.equal(this.tempTag.name)
+          expect(res.body[0].name).to.equal(this.tempCategory.name)
           done()
         })
     })
     it('should respond 401 if no Auth header', done => {
       request
-        .get(`${url}/api/tags`)
+        .get(`${url}/api/categories`)
         .end((err, res) => {
           expect(res.status).to.equal(401)
           expect(res.text).to.equal('UnauthorizedError')
@@ -138,7 +146,7 @@ describe('Testing Tag Routes', function() {
     })
     it('should respond 401 if no Token', done => {
       request
-        .get(`${url}/api/tags`)
+        .get(`${url}/api/categories`)
         .set('Authorization', 'Bearer')
         .end((err, res) => {
           expect(res.status).to.equal(401)
@@ -148,7 +156,7 @@ describe('Testing Tag Routes', function() {
     })
     it('should respond 401 if not Bearer', done => {
       request
-        .get(`${url}/api/tags`)
+        .get(`${url}/api/categories`)
         .set('Authorization', 'Basic token')
         .end((err, res) => {
           expect(res.status).to.equal(401)
@@ -160,9 +168,9 @@ describe('Testing Tag Routes', function() {
 
   describe('PUT', () => {
 
-    it('should return an updated tag', done => {
+    it('should return an updated category', done => {
       request
-        .put(`${url}/api/tags/${this.tempTag._id}`)
+        .put(`${url}/api/categories/${this.tempCategory._id}`)
         .set('Authorization', `Bearer ${this.tempUser.token}`)
         .send({name: 'updated name'})
         .end((err, res) => {
@@ -175,12 +183,40 @@ describe('Testing Tag Routes', function() {
 
   describe('DELETE', () => {
 
-    it('should delete a tag', done => {
+    before(done => {
+      new Task(mockTask).save()
+        .then(task => {
+          task.user = this.tempUser._id
+          task.category = this.tempCategory._id
+          return task.save()
+        })
+        .then(task => {
+          this.tempTask = task
+          return this.tempTask.save()
+        })
+        .then(() => {
+          this.uncat = new Category({name: 'uncategorized', user: this.tempUser._id})
+          return this.uncat.save()
+        })
+        .then(() => done())
+        .catch(done)
+    })
+
+    after(done => {
+      Task.remove({})
+        .then(() => done())
+        .catch(done)
+    })
+
+    it('should delete a category', done => {
+      console.log('before', this.tempTask)
       request
-        .delete(`${url}/api/tags/${this.tempTag._id}`)
+        .delete(`${url}/api/categories/${this.tempCategory._id}`)
         .set('Authorization', `Bearer ${this.tempUser.token}`)
         .end((err, res) => {
+          console.log('after', this.tempTask)
           expect(res.status).to.equal(204)
+          // expect(this.tempTask.category).to.equal(this.uncat._id)
           done()
         })
     })
