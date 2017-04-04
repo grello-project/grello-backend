@@ -8,7 +8,6 @@ const User = require('../model/user.js')
 const router = module.exports = new Router()
 
 router.get('/auth/google', (req, res) => {
-  console.log('MEOW /AUTH/GOOGLE')
   const googleAuthBase = 'https://accounts.google.com/o/oauth2/v2/auth'
   const googleAuthResponseType = 'response_type=code'
   const googleAuthClientID = `client_id=${process.env.CLIENT_ID}`
@@ -23,8 +22,6 @@ router.get('/auth/google', (req, res) => {
 })
 
 router.get('/auth/google/callback', googleOAUTH, (req, res, next) => {
-  console.log('MEOW /auth/google/callback')
-
   // if googleError deal with google Error
   if(req.googleError){
     return res.redirect('/')

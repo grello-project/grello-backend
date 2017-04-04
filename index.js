@@ -23,8 +23,9 @@ let accessLogStream = rfs('access.log', {
   path: logDirectory
 })
 
-const errorMiddleware = require('./lib/error-middleware.js')
-const authRoutes = require('./routes/auth-routes.js')
+const errorMiddleware = require('./lib/error-middleware')
+const authRoutes = require('./routes/auth-routes')
+const userRoutes = require('./routes/user-routes')
 const taskRoutes = require('./routes/task-routes')
 const categoryRoutes = require('./routes/category-routes')
 const tagRoutes = require('./routes/tag-routes')
@@ -46,6 +47,7 @@ if (process.env.PRODUCTION) {
 app.use(morganLogs)
 app.use(jsonParser)
 app.use(authRoutes)
+app.use(userRoutes)
 app.use(taskRoutes)
 app.use(categoryRoutes)
 app.use(tagRoutes)

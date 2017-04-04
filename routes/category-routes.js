@@ -5,7 +5,6 @@ const Task = require('../model/task.js')
 const bearerAuth = require('../lib/bearer-auth-middleware')
 
 const Router = require('express').Router
-
 const router = module.exports = new Router()
 
 router.post('/api/categories', bearerAuth, (req, res, next) => {
