@@ -6,10 +6,9 @@ const expect = require('chai').expect
 
 const User = require('../model/user')
 const Category = require('../model/category')
+const Task = require('../model/task')
 
 const PORT = process.env.PORT || 3000
-
-process.env.MONGODB_URI = 'mongodb://localhost/devFinal'
 
 const url = 'http://localhost:3000'
 
@@ -23,10 +22,16 @@ const mockCategory = {
   name: 'test category'
 }
 
+const mockTask = {
+  googleID: 'imatask12345',
+  author: 'I ARE AUTHOR',
+  comment: 'meow time! dogs suck!'
+}
+
 describe('Testing Category Routes', function() {
   let server
 
-  beforeEach(done => {
+  before(done => {
 
     server = app.listen(PORT)
 
@@ -51,7 +56,7 @@ describe('Testing Category Routes', function() {
       .catch(done)
   })
 
-  afterEach(done => {
+  after(done => {
     User.remove({})
     .then(() => Category.remove({}))
     .then(() => {
@@ -178,12 +183,44 @@ describe('Testing Category Routes', function() {
 
   describe('DELETE', () => {
 
+    before(done => {
+      new Task(mockTask).save()
+        .then(task => {
+          task.user = this.tempUser._id
+          task.category = this.tempCategory._id
+          return task.save()
+        })
+        .then(task => {
+          this.tempTask = task
+          return this.tempTask.save()
+        })
+        .then(() => {
+          this.uncat =  new Category({name: 'uncategorized', user: this.tempUser._id})
+          return this.uncat.save()
+        })
+        .then(() => {
+          console.log('uncat', this.uncat)
+          console.log('temp cat', this.tempCategory)
+          console.log('temp task', this.tempTask)
+          console.log('user in test', this.tempUser)
+          done()
+        })
+        .catch(done)
+    })
+
+    after(done => {
+      Task.remove({})
+        .then(() => done())
+        .catch(done)
+    })
+
     it('should delete a category', done => {
       request
         .delete(`${url}/api/categories/${this.tempCategory._id}`)
         .set('Authorization', `Bearer ${this.tempUser.token}`)
         .end((err, res) => {
           expect(res.status).to.equal(204)
+          expect(this.tempTask.category).to.equal(this.uncat._id)
           done()
         })
     })

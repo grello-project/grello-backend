@@ -9,8 +9,6 @@ const Tag = require('../model/tag')
 
 const PORT = process.env.PORT || 3000
 
-process.env.MONGODB_URI = 'mongodb://localhost/devFinal'
-
 const url = 'http://localhost:3000'
 
 const mockUser = {
