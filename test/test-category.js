@@ -209,14 +209,24 @@ describe('Testing Category Routes', function() {
     })
 
     it('should delete a category', done => {
-      console.log('before', this.tempTask)
       request
         .delete(`${url}/api/categories/${this.tempCategory._id}`)
         .set('Authorization', `Bearer ${this.tempUser.token}`)
         .end((err, res) => {
-          console.log('after', this.tempTask)
           expect(res.status).to.equal(204)
-          // expect(this.tempTask.category).to.equal(this.uncat._id)
+          done()
+        })
+    })
+    it('should update a tasks category to uncategorized', done => {
+      request
+        .delete(`${url}/api/categories/${this.tempCategory._id}`)
+        .set('Authorization', `Bearer ${this.tempUser.token}`)
+        .end((err, res) => {
+          Task.findById(this.tempTask._id).
+            then(task => {
+              expect(res.status).to.equal(204)
+              expect(task.category).to.equal(this.uncat._id)
+            })
           done()
         })
     })
