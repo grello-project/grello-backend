@@ -19,6 +19,7 @@ const mockGoogleUser = {
 }
 
 describe('testing auth routes', function() {
+  process.env.NODE_ENV='testing'
   let server
 
   before(done => {

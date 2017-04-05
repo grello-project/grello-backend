@@ -213,6 +213,15 @@ describe('Testing Category Routes', function() {
         .delete(`${url}/api/categories/${this.tempCategory._id}`)
         .set('Authorization', `Bearer ${this.tempUser.token}`)
         .end((err, res) => {
+          expect(res.status).to.equal(204)
+          done()
+        })
+    })
+    it('should update a tasks category to uncategorized', done => {
+      request
+        .delete(`${url}/api/categories/${this.tempCategory._id}`)
+        .set('Authorization', `Bearer ${this.tempUser.token}`)
+        .end((err, res) => {
           Task.findById(this.tempTask._id).
             then(task => {
               expect(res.status).to.equal(204)
