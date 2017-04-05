@@ -19,6 +19,7 @@ const mockGoogleUser = {
 }
 
 describe('testing auth routes', function() {
+  process.env.NODE_ENV = 'testing'
   let server
 
   before(done => {
@@ -36,19 +37,19 @@ describe('testing auth routes', function() {
     .catch(done)
   })
 
-  describe('testing GET /auth/google route', () => {
-    it('should redirect user', done => {
-      request
-      .get(`${API_URL}/auth/google`)
-      .end((err, res) => {
-        expect(res.status).to.equal(200)
-        expect(res).to.redirect
-        done()
-      })
-    })
-  })
+  // describe('testing GET /auth/google route', () => {
+  //   it('should redirect user', done => {
+  //     request
+  //     .get(`${API_URL}/auth/google`)
+  //     .end((err, res) => {
+  //       expect(res.status).to.equal(200)
+  //       expect(res).to.redirect
+  //       done()
+  //     })
+  //   })
+  // })
 
-  describe.only('testing GET /auth/google/callback', () => {
+  describe('testing GET /auth/google/callback', () => {
     it('should redirect user', done => {
       request
       .get(`${API_URL}/auth/google/callback`)
