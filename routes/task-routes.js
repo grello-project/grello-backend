@@ -7,7 +7,9 @@ const Router = require('express').Router
 const router = module.exports = new Router()
 
 router.get('/api/tasks', bearerAuth, (req, res, next) => {
-  Task.find({userID: req.user._id})
+  Task
+  .find({userID: req.user._id})
+  .populate('category')
   .then(tasks => res.json(tasks))
   .catch(next)
 })

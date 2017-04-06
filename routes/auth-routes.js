@@ -26,7 +26,7 @@ router.get('/auth/google/callback', googleOAUTH, (req, res, next) => {
   if(req.googleError){
     return res.redirect('/')
   }
-
+  let existingUser = false
   User.findOne({email: req.googleOAUTH.email})
   .then(user => {
     if (!user) {
@@ -41,16 +41,22 @@ router.get('/auth/google/callback', googleOAUTH, (req, res, next) => {
         tokenTimestamp: Date.now()
       }
       user = new User(userData).save()
+    } else {
+      console.log('user exists:', user)
+      existingUser = true
     }
     return Promise.resolve(user)
   })
   .then(user => {
+    if (existingUser) {
+      return Promise.resolve(user)
+    }
     return getFiles(user)
   })
   .then(user => user.generateToken())
   .then(token => {
     console.log(token)
-    res.redirect(`https://wattle.io/?token=${token}`)
+    res.redirect(`http://localhost:8080/#!/join?token=${token}`)
   })
   .catch(next)
 })
