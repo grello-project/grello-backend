@@ -64,5 +64,8 @@ We used AWS CodeDeploy to launch the application.
 
 Testing was done with Karma and Jasmine.
 
+![jasmine-and-karma](https://cloud.githubusercontent.com/assets/15117936/24769214/8d33e9e2-1aba-11e7-860c-9f645ae63606.png)
+
+
 [![Coverage Status](https://coveralls.io/repos/github/grello-project/grello-backend/badge.svg?branch=staging)](https://coveralls.io/github/grello-project/grello-backend?branch=staging)
 
