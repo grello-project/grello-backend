@@ -4,11 +4,12 @@ let mongoose = require('mongoose')
 
 let taskSchema = mongoose.Schema({
   googleID: {type: String, required: true, unique: true},
+  priority: Number,
   project: {type: mongoose.Schema.Types.ObjectId, ref: 'projects'},
-  taskName: {type: String, required: true},
+  author: {type: String, required: true},
   category: {type: mongoose.Schema.Types.ObjectId, ref: 'categories'},
-  user: {type: mongoose.Schema.Types.ObjectId, ref: 'users'},
-  email: {type: String, required: true},
+  userID: {type: mongoose.Schema.Types.ObjectId, ref: 'users'},
+  comment: {type: String, required: true},
   dueDate: Date,
   assignedDate: Date,
   done: Boolean

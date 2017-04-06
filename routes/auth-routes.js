@@ -1,72 +1,62 @@
 'use strict'
 
 const Router = require('express').Router
-const passport = require('passport')
+const googleOAUTH = require('../lib/google-oauth-middleware.js')
+const getFiles = require('../lib/files.js')
 const User = require('../model/user.js')
-const GoogleStrategy = require('passport-google-oauth20').Strategy
 
 const router = module.exports = new Router()
 
+router.get('/auth/google', (req, res) => {
+  const googleAuthBase = 'https://accounts.google.com/o/oauth2/v2/auth'
+  const googleAuthResponseType = 'response_type=code'
+  const googleAuthClientID = `client_id=${process.env.CLIENT_ID}`
+  const googleAuthScope = 'scope=profile%20email%20openid%20https://www.googleapis.com/auth/drive'
+  const googleAuthRedirectURI = 'redirect_uri=http://localhost:3000/auth/google/callback'
+  const googleAuthAccessType = 'access_type=offline'
+  const googleAuthPrompt = 'prompt=consent'
 
-passport.use(new GoogleStrategy({
-  clientID: process.env.CLIENT_ID,
-  clientSecret: process.env.CLIENT_SECRET,
-  callbackURL: 'http://localhost:3000/auth/google/callback'
-},
-function(accessToken, refreshToken, profile, cb) {
-  console.log('accessToken', accessToken)
-  console.log('PROFILE', profile)
+  const googleAuthURL = `${googleAuthBase}?${googleAuthResponseType}&${googleAuthClientID}&${googleAuthScope}&${googleAuthRedirectURI}&${googleAuthAccessType}&${googleAuthPrompt}`
 
-  User.findOne({email: profile.emails[0].value})
+  res.redirect(googleAuthURL)
+})
+
+router.get('/auth/google/callback', googleOAUTH, (req, res, next) => {
+  // if googleError deal with google Error
+  if(req.googleError){
+    return res.redirect('/')
+  }
+  let existingUser = false
+  User.findOne({email: req.googleOAUTH.email})
   .then(user => {
-    if (!user) return Promise.reject(new Error('user not found'))
-    return user
-  })
-  .catch(err => {
-    if (err.message === 'user not found'){
+    if (!user) {
       let userData = {
-        name: profile.name.givenName,
-        email: profile.emails[0].value,
-        googleID: profile.id,
-        refreshToken: refreshToken,
-        accessToken: accessToken,
-        profilePic: profile.photos[0].value
+        googleID: req.googleOAUTH.googleID,
+        name: req.googleOAUTH.name,
+        email: req.googleOAUTH.email,
+        profilePic: req.googleOAUTH.profilePic,
+        accessToken: req.googleOAUTH.accessToken,
+        refreshToken: req.googleOAUTH.refreshToken,
+        tokenTTL: req.googleOAUTH.tokenTTL,
+        tokenTimestamp: Date.now()
       }
-      return new User(userData).save()
+      user = new User(userData).save()
+    } else {
+      console.log('user exists:', user)
+      existingUser = true
     }
-    return Promise.reject(err)
+    return Promise.resolve(user)
   })
-
-  return cb(null, profile)
-
-  // .then(user => user.generateToken())
-  // .then(token => {
-  //   res.redirect(`/?token=${token}`);
-  // })
-  // .catch(err => {
-  //   console.error(err);
-  //   console.log('user not found');
-  //   res.redirect('/');
-  // })
-}))
-
-passport.serializeUser(function(user, cb) {
-  cb(null, user)
-})
-
-passport.deserializeUser(function(obj, cb) {
-  cb(null, obj)
-})
-
-router.get('/auth/google',
-  passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/userinfo.profile', 'email', 'https://www.googleapis.com/auth/drive'] }))
-
-router.get('/auth/google/callback',
-  passport.authenticate('google', { successRedirect: '/', failureRedirect: '/login' }),
-  function(req, res) {
-    // console.log(WTFFFDFDS);
-    console.log(('REQ.USER', req.user))
-    // Successful authentication, redirect home.
-    res.send('HELLO')
-    // res.redirect('/')
+  .then(user => {
+    if (existingUser) {
+      return Promise.resolve(user)
+    }
+    return getFiles(user)
   })
+  .then(user => user.generateToken())
+  .then(token => {
+    console.log(token)
+    res.redirect(`http://localhost:8080/#!/join?token=${token}`)
+  })
+  .catch(next)
+})
