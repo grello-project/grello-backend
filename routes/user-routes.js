@@ -10,6 +10,18 @@ const bearerAuth = require('../lib/bearer-auth-middleware')
 const Router = require('express').Router
 const router = module.exports = new Router()
 
+router.get('/api/users', bearerAuth, (req, res, next) => {
+  User.findById(req.user._id)
+  .then(user => {
+    user.refreshToken = null
+    user.accessToken = null
+    user.timeTTL = null
+    user.tokenTimestamp = null
+    res.json(user)
+  })
+  .catch(next)
+})
+
 router.delete('/api/users', bearerAuth, (req, res, next) => {
   User.findByIdAndRemove(req.user._id)
   .then(() => Task.remove({userID: req.user._id}))
