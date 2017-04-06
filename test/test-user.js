@@ -56,6 +56,18 @@ describe('testing task routes', function() {
     .catch(done)
   })
 
+  describe('testing GET /api/users route', () => {
+    it('should return user', done => {
+      request
+      .get(`${API_URL}/api/users`)
+      .set('Authorization', `Bearer ${this.tempUser.token}`)
+      .end((err, res) => {
+        expect(res.status).to.equal(200)
+        done()
+      })
+    })
+  })
+
   describe('testing DELETE /api/users route', () => {
     it('should return 401 for unauthenticated user', done => {
       request
