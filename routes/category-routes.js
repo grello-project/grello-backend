@@ -3,6 +3,7 @@
 const Category = require('../model/category.js')
 const Task = require('../model/task.js')
 const bearerAuth = require('../lib/bearer-auth-middleware')
+const uuidV4 = require('uuid/v4')
 
 const Router = require('express').Router
 const router = module.exports = new Router()
@@ -16,6 +17,7 @@ router.post('/api/categories', bearerAuth, (req, res, next) => {
   .then(newCategory => {
     catResult = newCategory
     return new Task({
+      googleID: uuidV4(),
       author: 'system',
       category: newCategory._id,
       userID: req.user._id,
