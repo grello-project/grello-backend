@@ -9,9 +9,10 @@ const router = module.exports = new Router()
 
 router.get('/auth/google/callback', googleOAUTH, (req, res, next) => {
   let existingUser
+  
   // if googleError deal with google Error
   if(req.googleError){
-    return res.redirect('/')
+    return res.redirect('http://localhost:8080')
   }
 
   User.findOne({email: req.googleOAUTH.email})
