@@ -58,6 +58,8 @@ All data is stored using Mongo in the Backend of our Project
 
 We used AWS CodeDeploy to launch the application.
 
+![aws-logo](https://cloud.githubusercontent.com/assets/15117936/24769034/cd01ae7a-1ab9-11e7-9e3a-6ef1c4b374e7.jpeg)
+
 # Testing
 
 Testing was done with Karma and Jasmine.
