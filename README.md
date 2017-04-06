@@ -51,6 +51,8 @@ All data is stored using Mongo in the Backend of our Project
 
  ### OAUTH:
  The user is signed into Google already, and is using Google docs.  Next, permission is granted by the user allowing google to share their information with the Wattle app.  Then the Google OAuth API sends server code to the Wattle backend server.  The Wattle backend server then sends the code back to the OAuth API with their 'secret' included.  Then the Google OAuth API sends back an access token with the request token. Then a request, with the bearer authorization token in the header, is sent to the Google openid API, which will fetch a specific set of information about the user.  The user is then placed into the application's database, and can begin using Wattle.
+ 
+ ![googleoauth](https://cloud.githubusercontent.com/assets/15117936/24738080/0a5ec518-1a48-11e7-88d0-f23e4ff22d75.jpg)
 
 # Deployment
 
