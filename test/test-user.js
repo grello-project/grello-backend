@@ -66,6 +66,61 @@ describe('testing task routes', function() {
         done()
       })
     })
+
+    it('should return users info without accessToken', done => {
+      request
+      .get(`${API_URL}/api/users`)
+      .set('Authorization', `Bearer ${this.tempUser.token}`)
+      .end((err, res) => {
+        expect(res.status).to.equal(200)
+        expect(res.body.accessToken).to.not.exist
+        done()
+      })
+    })
+
+    it('should return users info without refreshToken', done => {
+      request
+      .get(`${API_URL}/api/users`)
+      .set('Authorization', `Bearer ${this.tempUser.token}`)
+      .end((err, res) => {
+        expect(res.status).to.equal(200)
+        expect(res.body.refreshToken).to.not.exist
+        done()
+      })
+    })
+
+    it('should return users info without tokenTimestamp', done => {
+      request
+      .get(`${API_URL}/api/users`)
+      .set('Authorization', `Bearer ${this.tempUser.token}`)
+      .end((err, res) => {
+        expect(res.status).to.equal(200)
+        expect(res.body.timeo).to.not.exist
+        done()
+      })
+    })
+
+    it('should return users info without tokenTTL', done => {
+      request
+      .get(`${API_URL}/api/users`)
+      .set('Authorization', `Bearer ${this.tempUser.token}`)
+      .end((err, res) => {
+        console.log('THIS IS THE REZ YO', res.body)
+        expect(res.status).to.equal(200)
+        expect(res.body.tokenTTL).to.not.exist
+        done()
+      })
+    })
+
+    it('should return 401 for unauthenticated user', done => {
+      request
+      .get(`${API_URL}/api/users`)
+      .end((err, res) => {
+        expect(res.status).to.equal(401)
+        expect(res.body).to.deep.equal({})
+        done()
+      })
+    })
   })
 
   describe('testing DELETE /api/users route', () => {

@@ -9,10 +9,21 @@ const router = module.exports = new Router()
 
 router.post('/api/categories', bearerAuth, (req, res, next) => {
   req.body.user = req.user._id
-
+  let catResult = null
   const category = new Category(req.body)
-  category.save()
-  .then(category => res.json(category))
+  category
+  .save()
+  .then(newCategory => {
+    catResult = newCategory
+    return new Task({
+      author: 'system',
+      category: newCategory._id,
+      userID: req.user._id,
+      comment: 'placeholder'
+    })
+    .save()
+  })
+  .then( () => res.json(catResult))
   .catch(next)
 })
 
