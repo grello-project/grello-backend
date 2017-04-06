@@ -12,10 +12,6 @@
 
 Our goal is to provide a project workflow that will easily couple tasks to the assignee and allow for those tasks to be placed into categories.  The work flows from google docs to the Wattle application where the tasks can be assigned, from an uncategorized list, to the categories that each user sets.
 
-# To use this backend with another front end one must:
-
-how to link front and back.....................
-
 # Schemas Used
 
 All data is stored using Mongo in the Backend of our Project
