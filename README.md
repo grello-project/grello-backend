@@ -32,22 +32,37 @@ All data is stored using Mongo in the Backend of our Project
  ### GET/task
 
  This will bring the user to the task view, where one can see the uncategorized tasks as well as the categories created.
+ ```
+curl http://localhost:3000/users/task
+```
 
  ### PUT/task
 
  This route will allow for updating tasks.
+ ```
+curl -H "Authorization: Bearer <your token>" -H "Content-type: application/json" -d '{<information you want to update>}' -X PUT http://localhost:3000/api/task
+```
 
  ### /categories
 
  This route will show all categories created by the user.
+ ```
+curl http://localhost:3000/api/categories
+```
 
  ### /tags
 
  This route will show the categories that each task is associated with.  
+ ```
+curl http://localhost:3000/api/tags
+```
 
  ### /user
 
  The user that has signed up for the Google auth API.
+ ```
+curl http://localhost:3000/api/user
+```
 
  ### OAUTH:
  The user is signed into Google already, and is using Google docs.  Next, permission is granted by the user allowing google to share their information with the Wattle app.  Then the Google OAuth API sends server code to the Wattle backend server.  The Wattle backend server then sends the code back to the OAuth API with their 'secret' included.  Then the Google OAuth API sends back an access token with the request token. Then a request, with the bearer authorization token in the header, is sent to the Google openid API, which will fetch a specific set of information about the user.  The user is then placed into the application's database, and can begin using Wattle.
