@@ -1,18 +1,22 @@
 'use strict'
 
+const dotenv = require('dotenv')
+dotenv.load()
+
 const express = require('express')
 const mongoose = require('mongoose')
-const morgan = require('morgan')
-const dotenv = require('dotenv')
 const jsonParser = require('body-parser').json()
 const cors = require('cors')
 const app = express()
+
+const morgan = require('morgan')
 const fs = require('fs')
 const path = require('path')
 const rfs = require('rotating-file-stream')
 const logDirectory = path.join(__dirname, 'log')
 let morganLogs = null
-dotenv.load()
+
+const production = process.env.NODE_ENV === 'production'
 
 // taken from https://github.com/expressjs/morgan docs
 // ensure log directory exists
@@ -38,7 +42,7 @@ mongoose.connect(MONGODB_URI)
 mongoose.Promise = Promise //what does this do?
 
 
-if (process.env.PRODUCTION) {
+if (production) {
   // using 'combined' APACHE-like logs written to disk for production server
   morganLogs = morgan('combined', {stream: accessLogStream})
 } else {
@@ -57,7 +61,7 @@ app.use(errorMiddleware)
 
 app.get('/test', (req, res) => {
   res.json({
-    'msg': 'hello! You have successfully connected to the backend of Wattle.io'
+    'msg': 'hello! things are working great with Wattle.io'
   })
 })
 
@@ -65,6 +69,6 @@ module.exports = app
 
 if (require.main === module) {
   app.listen(PORT, () => {
-    if (!process.env.PRODUCTION) console.log('listening on PORT', PORT)
+    if (!production) console.log('listening on PORT', PORT)
   })
 }
