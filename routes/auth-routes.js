@@ -45,7 +45,7 @@ router.get('/auth/google/callback', googleOAUTH, (req, res, next) => {
   .then(user => user.generateToken())
   .then(token => {
     console.log(token)
-    res.redirect(`http://localhost:8080/#!/join?token=${token}`)
+    res.redirect(`https://wattle.io/#!/join?token=${token}`)
   })
   .catch(next)
 })
