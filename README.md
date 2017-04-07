@@ -18,7 +18,7 @@ Our goal is to provide a project workflow that will easily couple tasks to the a
 
 # Schemas Used
 
-All data is stored using Mongo in the Backend of our Project
+All data is stored using MongoDB in the Backend of our Project
 
 -Category: The different naming conventions used for each container, whether it be
  for different project names, or to assign urgency ratings for unassigned tasks.
