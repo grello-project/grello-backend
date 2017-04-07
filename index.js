@@ -6,10 +6,8 @@ dotenv.load()
 const express = require('express')
 const mongoose = require('mongoose')
 const jsonParser = require('body-parser').json()
+const cors = require('cors')
 const app = express()
-
-const passport = require('passport')
-require('./lib/passport.js')(passport)
 
 const morgan = require('morgan')
 const fs = require('fs')
@@ -30,8 +28,12 @@ let accessLogStream = rfs('access.log', {
   path: logDirectory
 })
 
-const errorMiddleware = require('./lib/error-middleware.js')
-const authRoutes = require('./routes/auth-routes.js')
+const errorMiddleware = require('./lib/error-middleware')
+const authRoutes = require('./routes/auth-routes')
+const userRoutes = require('./routes/user-routes')
+const taskRoutes = require('./routes/task-routes')
+const categoryRoutes = require('./routes/category-routes')
+const tagRoutes = require('./routes/tag-routes')
 
 const PORT = process.env.PORT || 3000
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/grello'
@@ -46,11 +48,15 @@ if (production) {
 } else {
   morganLogs = morgan('dev')
 }
-app.use(morganLogs)
 
+app.use(morganLogs)
 app.use(jsonParser)
-app.use(passport.initialize())
+app.use(cors())
 app.use(authRoutes)
+app.use(userRoutes)
+app.use(taskRoutes)
+app.use(categoryRoutes)
+app.use(tagRoutes)
 app.use(errorMiddleware)
 
 app.get('/test', (req, res) => {

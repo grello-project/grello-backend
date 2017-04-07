@@ -2,9 +2,9 @@
 
 let mongoose = require('mongoose')
 
-let categorySchema = mongoose.Schema({
+let tagSchema = mongoose.Schema({
   name: {type: String, required: true},
   user: {type: mongoose.Schema.Types.ObjectId, ref: 'users'}
 })
 
-module.exports = mongoose.model('categories', categorySchema)
+module.exports = mongoose.model('tags', tagSchema)
