@@ -11,7 +11,8 @@ let userSchema = mongoose.Schema({
   refreshToken: String,
   accessToken: String,
   tokenTTL: Number,
-  tokenTimestamp: Date,
+  tokenTimestamp: Number,
+  expiration: Number,
 })
 
 userSchema.methods.generateToken = function() {

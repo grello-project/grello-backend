@@ -9,7 +9,7 @@ const router = module.exports = new Router()
 
 router.get('/auth/google/callback', googleOAUTH, (req, res, next) => {
   let existingUser
-  
+
   // if googleError deal with google Error
   if(req.googleError){
     return res.redirect('http://localhost:8080')
@@ -26,7 +26,8 @@ router.get('/auth/google/callback', googleOAUTH, (req, res, next) => {
         accessToken: req.googleOAUTH.accessToken,
         refreshToken: req.googleOAUTH.refreshToken,
         tokenTTL: req.googleOAUTH.tokenTTL,
-        tokenTimestamp: Date.now()
+        tokenTimestamp: Date.now() / 1000,
+        expiration: (Date.now() / 1000) + req.googleOAUTH.tokenTTL,
       }
       user = new User(userData).save()
     } else {
