@@ -45,6 +45,12 @@ mongoose.Promise = Promise //what does this do?
 if (production) {
   // using 'combined' APACHE-like logs written to disk for production server
   morganLogs = morgan('combined', {stream: accessLogStream})
+  console.log = function() {
+    return
+  }
+  console.error = function() {
+    return
+  }
 } else {
   morganLogs = morgan('dev')
 }

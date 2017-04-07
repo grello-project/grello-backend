@@ -35,7 +35,8 @@
     "test-watch": "mocha --watch",
     "cover": "istanbul cover _mocha",
     "coveralls": "npm run cover -- --report lcovonly && cat ./coverage/lcov.info | coveralls",
-    "lint": "./node_modules/.bin/eslint ."
+    "lint": "./node_modules/.bin/eslint .",
+    "deploy": "pm2 deploy ecosystem.config.js production"
   },
   "dependencies": {
     "body-parser": "^1.17.1",
