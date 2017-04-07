@@ -48,6 +48,9 @@ if (production) {
   console.log = function() {
     return
   }
+  console.error = function() {
+    return
+  }
 } else {
   morganLogs = morgan('dev')
 }
