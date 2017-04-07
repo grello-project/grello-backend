@@ -58,9 +58,14 @@ All data is stored using Mongo in the Backend of our Project
 
 We used AWS CodeDeploy to launch the application.
 
+![aws-logo](https://cloud.githubusercontent.com/assets/15117936/24769034/cd01ae7a-1ab9-11e7-9e3a-6ef1c4b374e7.jpeg)
+
 # Testing
 
 Testing was done with Karma and Jasmine.
+
+![jasmine-and-karma](https://cloud.githubusercontent.com/assets/15117936/24769214/8d33e9e2-1aba-11e7-860c-9f645ae63606.png)
+
 
 [![Coverage Status](https://coveralls.io/repos/github/grello-project/grello-backend/badge.svg?branch=staging)](https://coveralls.io/github/grello-project/grello-backend?branch=staging)
 
