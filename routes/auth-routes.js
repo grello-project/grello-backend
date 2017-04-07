@@ -4,6 +4,8 @@ const Router = require('express').Router
 const googleOAUTH = require('../lib/google-oauth-middleware.js')
 const getFiles = require('../lib/files.js')
 const User = require('../model/user.js')
+const FRONTEND_URL = process.env.API_URL || 'http://locahost:8080'
+const BACKEND_URL = process.env.WATTLE_URL || 'http://localhost:3000'
 
 const router = module.exports = new Router()
 
@@ -12,7 +14,7 @@ router.get('/auth/google/callback', googleOAUTH, (req, res, next) => {
 
   // if googleError deal with google Error
   if(req.googleError){
-    return res.redirect('http://localhost:8080')
+    return res.redirect(FRONTEND_URL)
   }
 
   User.findOne({email: req.googleOAUTH.email})
@@ -45,7 +47,7 @@ router.get('/auth/google/callback', googleOAUTH, (req, res, next) => {
   .then(user => user.generateToken())
   .then(token => {
     console.log(token)
-    res.redirect(`https://wattle.io/#!/join?token=${token}`)
+    res.redirect(`${FRONTEND_URL}/#!/join?token=${token}`)
   })
   .catch(next)
 })
