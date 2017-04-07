@@ -8,6 +8,7 @@ let taskSchema = mongoose.Schema({
   tag: {type: mongoose.Schema.Types.ObjectId, ref: 'tags'},
   document: {type: mongoose.Schema.ObjectId, ref: 'documents'},
   author: {type: String, required: true},
+  quote: String,
   category: {type: mongoose.Schema.Types.ObjectId, ref: 'categories'},
   userID: {type: mongoose.Schema.Types.ObjectId, ref: 'users'},
   comment: {type: String, required: true},
