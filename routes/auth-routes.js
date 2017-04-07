@@ -4,8 +4,8 @@ const Router = require('express').Router
 const googleOAUTH = require('../lib/google-oauth-middleware.js')
 const getFiles = require('../lib/files.js')
 const User = require('../model/user.js')
-const FRONTEND_URL = process.env.API_URL || 'http://locahost:8080'
-const BACKEND_URL = process.env.WATTLE_URL || 'http://localhost:3000'
+const BACKEND_URL = process.env.API_URL || 'http://locahost:3000'
+const FRONTEND_URL = process.env.WATTLE_URL || 'http://localhost:8080'
 
 const router = module.exports = new Router()
 
