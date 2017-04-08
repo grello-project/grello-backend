@@ -51,6 +51,15 @@ if (production) {
   console.error = function() {
     return
   }
+  // http://stackoverflow.com/questions/9024783/how-to-force-node-js-express-js-to-https-when-it-is-running-behind-an-aws-load-b
+  // for dealing with AWS ELB
+  app.use(function(req, res, next) {
+    if((!req.secure) && (req.get('X-Forwarded-Proto') !== 'https')) {
+      res.redirect('https://' + req.get('Host') + req.url)
+    }
+    else
+    next()
+  })
 } else {
   morganLogs = morgan('dev')
 }
