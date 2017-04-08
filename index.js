@@ -13,7 +13,9 @@ const morgan = require('morgan')
 const fs = require('fs')
 const path = require('path')
 const rfs = require('rotating-file-stream')
+const util = require('util')
 const logDirectory = path.join(__dirname, 'log')
+const debugDirectory = path.join(__dirname, '/log/debug')
 let morganLogs = null
 
 const production = process.env.NODE_ENV === 'production'
@@ -21,12 +23,15 @@ const production = process.env.NODE_ENV === 'production'
 // taken from https://github.com/expressjs/morgan docs
 // ensure log directory exists
 fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
+fs.existsSync(debugDirectory) || fs.mkdirSync(debugDirectory)
 
 // create a rotating file stream with daily rotation of logs
 let accessLogStream = rfs('access.log', {
   interval: '1d',
   path: logDirectory
 })
+
+let accessDebugStream = fs.createWriteStream(`${debugDirectory}/consoleLog.txt`, {flags :  'w'})
 
 const errorMiddleware = require('./lib/error-middleware')
 const authRoutes = require('./routes/auth-routes')
@@ -45,21 +50,13 @@ mongoose.Promise = Promise //what does this do?
 if (production) {
   // using 'combined' APACHE-like logs written to disk for production server
   morganLogs = morgan('combined', {stream: accessLogStream})
+  // overriding console logging so it doesn't crash pm2
   console.log = function() {
-    return
+    accessDebugStream.write('log: ' + util.format.apply(null, arguments) + '\n')
   }
   console.error = function() {
-    return
+    accessDebugStream.write('error: ' + util.format.apply(null, arguments) + '\n')
   }
-  // http://stackoverflow.com/questions/9024783/how-to-force-node-js-express-js-to-https-when-it-is-running-behind-an-aws-load-b
-  // for dealing with AWS ELB
-  app.use(function(req, res, next) {
-    if((!req.secure) && (req.get('X-Forwarded-Proto') !== 'https')) {
-      res.redirect('https://' + req.get('Host') + req.url)
-    }
-    else
-    next()
-  })
 } else {
   morganLogs = morgan('dev')
 }
