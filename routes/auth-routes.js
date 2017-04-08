@@ -4,7 +4,6 @@ const Router = require('express').Router
 const googleOAUTH = require('../lib/google-oauth-middleware.js')
 const getFiles = require('../lib/files.js')
 const User = require('../model/user.js')
-const BACKEND_URL = process.env.API_URL || 'http://locahost:3000'
 const FRONTEND_URL = process.env.WATTLE_URL || 'http://localhost:8080'
 
 const router = module.exports = new Router()
@@ -12,8 +11,8 @@ const router = module.exports = new Router()
 router.get('/auth/google/callback', googleOAUTH, (req, res, next) => {
   let existingUser
 
-  // if googleError deal with google Error
   if(req.googleError){
+    console.error('Auth Failed!', req.googleError)
     return res.redirect(FRONTEND_URL)
   }
 

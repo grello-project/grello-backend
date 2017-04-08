@@ -14,8 +14,9 @@ module.exports = {
         MONGODB_URI: 'mongodb://wattleuser:1JJ2123jdsflj23@52.38.10.113:27017/wattle_db',
         CLIENT_ID: '461555961018-875vq6kd1l5hg0oncvqptpfuf1epqvbk.apps.googleusercontent.com',
         CLIENT_SECRET: '5DRfiQA8SY00ZyLWnG9cob9G',
-        API_URL: 'http://ec2-52-11-133-170.us-west-2.compute.amazonaws.com:3000',
-        WATTLE_URL: 'https://wattle.io'
+        API_URL: 'https://api.wattle.io',
+        WATTLE_URL: 'https://wattle.io',
+        DEBUG: 'debug'
       },
       env_production : {
         NODE_ENV: 'production',
