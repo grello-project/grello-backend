@@ -98,3 +98,5 @@ Session.vim
 tags
 
 .env
+
+log/
