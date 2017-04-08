@@ -9,7 +9,7 @@ const router = module.exports = new Router()
 router.get('/api/tasks', bearerAuth, (req, res, next) => {
   Task
   .find({userID: req.user._id})
-  .populate('category')
+  .populate('category document')
   .then(tasks => res.json(tasks))
   .catch(next)
 })
