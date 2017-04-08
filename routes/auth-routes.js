@@ -12,6 +12,7 @@ router.get('/auth/google/callback', googleOAUTH, (req, res, next) => {
   let existingUser
 
   if(req.googleError){
+    console.error('Auth Failed!', req.googleError)
     return res.redirect(FRONTEND_URL)
   }
 
