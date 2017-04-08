@@ -12,6 +12,14 @@ let taskSchema = mongoose.Schema({
   category: {type: mongoose.Schema.Types.ObjectId, ref: 'categories'},
   userID: {type: mongoose.Schema.Types.ObjectId, ref: 'users'},
   comment: {type: String, required: true},
+  replies: [{
+    googleID: String,
+    createdTime: String,
+    modifiedTime: String,
+    authorName: String,
+    authorPic: String,
+    content: String
+  }],
   link: String,
   dueDate: Date,
   assignedDate: Date,

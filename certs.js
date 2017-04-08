@@ -16,10 +16,10 @@ let leChallenge = require('le-challenge-fs').create({
   debug: debugToggle
 })
 
-function leAgree(opts, agreeCb) {
-  //opts
-  agreeCb(null, opts.tosUrl)
-}
+// function leAgree(opts, agreeCb) {
+//   //opts
+//   agreeCb(null, opts.tosUrl)
+// }
 
 le = LE.create({
   server: LE.stagingServerUrl,
