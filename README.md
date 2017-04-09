@@ -1,5 +1,6 @@
 
-# grello_backend
+# Wattle Backend
+[![Build Status](https://travis-ci.org/grello-project/grello-backend.svg?branch=staging)](https://travis-ci.org/grello-project/grello-backend)
 
 
 # Introduction to the Team

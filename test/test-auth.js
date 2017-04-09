@@ -15,7 +15,10 @@ const mockGoogleUser = {
   email: 'test@gmail.com',
   profilePic: 'testpic.png',
   accessToken: 'testAccessToken',
-  refreshToken: 'testRefreshToken'
+  refreshToken: 'testRefreshToken',
+  tokenTTL: 1,
+  tokenTimestamp: 1234,
+  expiration: 1235,
 }
 
 describe('testing auth routes', function() {
@@ -24,7 +27,6 @@ describe('testing auth routes', function() {
 
   before(done => {
     server = app.listen(PORT, () => console.log('started server from auth tests'))
-
     done()
   })
 
@@ -43,7 +45,6 @@ describe('testing auth routes', function() {
       .get(`${API_URL}/auth/google/callback`)
       .send(mockGoogleUser)
       .end((err, res) => {
-        expect(res.status).to.equal(200)
         expect(res).to.redirect
         done()
       })
