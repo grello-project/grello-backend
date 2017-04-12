@@ -39,6 +39,7 @@ const userRoutes = require('./routes/user-routes')
 const taskRoutes = require('./routes/task-routes')
 const categoryRoutes = require('./routes/category-routes')
 const tagRoutes = require('./routes/tag-routes')
+const gapiRoutes = require('./routes/gapi-routes')
 
 const PORT = process.env.PORT || 3000
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/grello'
@@ -70,6 +71,7 @@ app.use(taskRoutes)
 app.use(categoryRoutes)
 app.use(tagRoutes)
 app.use(errorMiddleware)
+app.use(gapiRoutes)
 
 app.get('/test', (req, res) => {
   res.json({
