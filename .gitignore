@@ -100,3 +100,5 @@ tags
 .env
 
 log/
+
+ecosystem.config.js
