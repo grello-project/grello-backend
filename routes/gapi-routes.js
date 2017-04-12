@@ -31,8 +31,8 @@ router.get('/gapi/auth/success', (req, res) => {
     if (err) console.error(err)
     oauth2Client.setCredentials(tokens)
   })
-  plus.people.get({userId: 'me', auth: oauth2Client}, (err, profile) => {
-    if (err) console.error(err)
-    // res.send(profile)
-  })
+  // plus.people.get({userId: 'me', auth: oauth2Client}, (err, profile) => {
+  //   if (err) console.error(err)
+  //   console.log(profile)
+  // })
 })
