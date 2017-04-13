@@ -64,6 +64,10 @@ router.get('/gapi/auth/success', (req, res) => {
           console.log('getting docs')
           return getDocs(user)
         })
+        .then(results => {
+          console.log('results =', results)
+          return Promise.resolve(results.user)
+        })
         .then(user => user.generateToken())
         .then(token => res.redirect(`${FRONTEND_URL}/#!/join?token=${token}`))
         .catch(err => Promise.reject(err))
