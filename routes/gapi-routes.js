@@ -7,18 +7,12 @@ const BACKEND_URL = process.env.API_URL || 'http://localhost:3000'
 
 const google = require('googleapis')
 const plus = google.plus('v1')
-const OAuth2Client = google.auth.OAuth2
 
-const getFiles = require('../lib/files.js')
+// const getFiles = require('../lib/files.js')
+const getDocs = require('../lib/gapi-getDocs')
 const User = require('../model/user.js')
 
-let redirect_url = `${BACKEND_URL}/gapi/auth/success`
-
-let oauth2Client = new OAuth2Client(
-  process.env.CLIENT_ID,
-  process.env.CLIENT_SECRET,
-  redirect_url
-)
+let oauth2Client = require('../lib/gapi-OAuth2')
 
 let scopes = [
   'openid',
@@ -39,6 +33,7 @@ router.get('/gapi/auth', (req, res) => {
 })
 
 router.get('/gapi/auth/success', (req, res) => {
+  console.log('entered success route')
   oauth2Client.getToken(req.query.code, (err, tokens) => {
     if (err) return console.error(err)
     oauth2Client.setCredentials(tokens)
@@ -65,7 +60,9 @@ router.get('/gapi/auth/success', (req, res) => {
         })
         .then(user => {
           if (existingUser) return Promise.resolve(user)
-          return getFiles(user)
+          // return getFiles(user)
+          console.log('getting docs')
+          return getDocs(user)
         })
         .then(user => user.generateToken())
         .then(token => res.redirect(`${FRONTEND_URL}/#!/join?token=${token}`))
