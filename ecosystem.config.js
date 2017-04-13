@@ -16,7 +16,8 @@ module.exports = {
         CLIENT_SECRET: '5DRfiQA8SY00ZyLWnG9cob9G',
         API_URL: 'https://api.wattle.io',
         WATTLE_URL: 'https://wattle.io',
-        DEBUG: 'debug'
+        DEBUG: 'debug',
+        SECRET: 'wattlers4lyfe'
       },
       env_production : {
         NODE_ENV: 'production',
