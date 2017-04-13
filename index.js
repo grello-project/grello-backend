@@ -34,7 +34,6 @@ let accessLogStream = rfs('access.log', {
 let accessDebugStream = fs.createWriteStream(`${debugDirectory}/consoleLog.txt`, {flags :  'w'})
 
 const errorMiddleware = require('./lib/error-middleware')
-const authRoutes = require('./routes/auth-routes')
 const userRoutes = require('./routes/user-routes')
 const taskRoutes = require('./routes/task-routes')
 const categoryRoutes = require('./routes/category-routes')
@@ -65,13 +64,12 @@ if (production) {
 app.use(morganLogs)
 app.use(jsonParser)
 app.use(cors())
-app.use(authRoutes)
+app.use(gapiRoutes)
 app.use(userRoutes)
 app.use(taskRoutes)
 app.use(categoryRoutes)
 app.use(tagRoutes)
 app.use(errorMiddleware)
-app.use(gapiRoutes)
 
 app.get('/test', (req, res) => {
   res.json({
