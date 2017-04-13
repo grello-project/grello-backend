@@ -3,13 +3,14 @@
 const Router = require('express').Router
 
 const FRONTEND_URL = process.env.WATTLE_URL || 'http://localhost:8080'
-const BACKEND_URL = process.env.API_URL || 'http://localhost:3000'
+// const BACKEND_URL = process.env.API_URL || 'http://localhost:3000'
 
 const google = require('googleapis')
 const plus = google.plus('v1')
 
 // const getFiles = require('../lib/files.js')
-const getDocs = require('../lib/gapi-getDocs')
+const getFiles = require('../lib/gapi-promisifiedFilesList')
+const getTasks = require('../lib/gapi-promisifiedAndFilteredCommentsList')
 const User = require('../model/user.js')
 
 let oauth2Client = require('../lib/gapi-OAuth2')
@@ -37,6 +38,7 @@ router.get('/gapi/auth/success', (req, res) => {
   oauth2Client.getToken(req.query.code, (err, tokens) => {
     if (err) return console.error(err)
     oauth2Client.setCredentials(tokens)
+    // TODO: Package this into another module
     plus.people.get({userId: 'me', auth: oauth2Client}, (err, profile) => {
       let existingUser
       if (err) console.error(err)
@@ -60,14 +62,21 @@ router.get('/gapi/auth/success', (req, res) => {
         })
         .then(user => {
           if (existingUser) return Promise.resolve(user)
-          // return getFiles(user)
-          console.log('getting docs')
-          return getDocs(user)
+          console.log('getting files')
+          return getFiles(user)
         })
-        .then(results => {
-          console.log('results =', results)
-          return Promise.resolve(results.user)
+        .then(filesResults => {
+          console.log('Files results:\n\n', filesResults.files[0], '\n\n')
+          console.log('getting comments')
+          return Promise.all(filesResults.files.slice(0,3).map(file => {
+            return getTasks(file, filesResults.user)
+          }))
         })
+        .then(commentsResults => {
+          console.log('here are the comments results:\n\n', commentsResults, '\n\n')
+          return Promise.resolve(commentsResults[0].user)
+        })
+        // TODO: SAVE FILES HERE THEN generateToken
         .then(user => user.generateToken())
         .then(token => res.redirect(`${FRONTEND_URL}/#!/join?token=${token}`))
         .catch(err => Promise.reject(err))
