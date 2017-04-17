@@ -13,6 +13,7 @@ let userSchema = mongoose.Schema({
   tokenTTL: Number,
   tokenTimestamp: Number,
   expiration: Number,
+  timesLoggedIn: {type: Number, default: 0}
 })
 
 userSchema.methods.generateToken = function() {
