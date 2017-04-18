@@ -1,5 +1,7 @@
 'use strict'
 
+const DELAY = 200
+
 const Router = require('express').Router
 const router = module.exports = new Router()
 
@@ -42,8 +44,14 @@ router.get('/gapi/auth/success', (req, res, next) => {
       return getFiles(user)
         .then(filesResults => {
           // TODO: get rid of this slice before going live!!!!
-          return Promise.all(filesResults.files.slice(0,5).map(file => {
-            return getTasks(file, user)
+          return Promise.all(filesResults.files.map((file, index) => {
+            return new Promise((resolve, reject) => {
+              setTimeout(function () {
+                return getTasks(file, user)
+                  .then(resolve)
+                  .catch(reject)
+              }, DELAY*index)
+            })
           }))
         })
         .then(commentsResults => {
