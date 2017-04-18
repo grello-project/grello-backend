@@ -34,12 +34,12 @@ let accessLogStream = rfs('access.log', {
 let accessDebugStream = fs.createWriteStream(`${debugDirectory}/consoleLog.txt`, {flags :  'w'})
 
 const errorMiddleware = require('./lib/error-middleware')
-const authRoutes = require('./routes/auth-routes')
 const userRoutes = require('./routes/user-routes')
 const documentRoutes = require('./routes/document-routes')
 const taskRoutes = require('./routes/task-routes')
 const categoryRoutes = require('./routes/category-routes')
 const tagRoutes = require('./routes/tag-routes')
+const gapiRoutes = require('./routes/gapi-routes')
 
 const PORT = process.env.PORT || 3000
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/grello'
@@ -65,7 +65,7 @@ if (production) {
 app.use(morganLogs)
 app.use(jsonParser)
 app.use(cors())
-app.use(authRoutes)
+app.use(gapiRoutes)
 app.use(userRoutes)
 app.use(documentRoutes)
 app.use(taskRoutes)

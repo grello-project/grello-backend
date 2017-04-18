@@ -3,7 +3,7 @@
 let mongoose = require('mongoose')
 
 let taskSchema = mongoose.Schema({
-  googleID: {type: String, unique: true},
+  googleID: {type: String},
   priority: Number,
   tag: {type: mongoose.Schema.Types.ObjectId, ref: 'tags'},
   document: {type: String, ref: 'documents'},
