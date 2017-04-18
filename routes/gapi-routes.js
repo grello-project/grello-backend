@@ -8,7 +8,6 @@ const router = module.exports = new Router()
 const FRONTEND_URL = process.env.WATTLE_URL || 'http://localhost:8080'
 // const BACKEND_URL = process.env.API_URL || 'http://localhost:3000'
 
-// const getFiles = require('../lib/files.js')
 const authenticateAndSaveUser = require('../lib/authenticateAndSaveUser')
 const getFiles = require('../lib/getFiles')
 const getTasks = require('../lib/getTasks')
