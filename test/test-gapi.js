@@ -21,28 +21,40 @@ const mockGoogleUser = {
   expiration: 1235,
 }
 
-describe('testing auth routes', function() {
+describe('testing gapi routes', function() {
   process.env.NODE_ENV='testing'
   let server
 
   before(done => {
-    server = app.listen(PORT, () => console.log('started server from auth tests'))
+    server = app.listen(PORT, () => console.log('started server from gapi tests'))
     done()
   })
 
   after(done => {
     User.remove()
     .then(() => {
-      server.close(() => console.log('server closed after auth tests'))
+      server.close(() => console.log('server closed after gapi tests'))
       done()
     })
     .catch(done)
   })
 
-  describe('testing GET /auth/google/callback', () => {
+  describe('testing GET /gapi/auth', () => {
     it('should redirect user', done => {
       request
-      .get(`${API_URL}/auth/google/callback`)
+      .get(`${API_URL}/gapi/auth`)
+      .send(mockGoogleUser)
+      .end((err, res) => {
+        expect(res).to.redirect
+        done()
+      })
+    })
+  })
+
+  describe('testing GET /gapi/auth/success', () => {
+    it('should redirect user', done => {
+      request
+      .get(`${API_URL}/gapi/auth/success`)
       .send(mockGoogleUser)
       .end((err, res) => {
         expect(res).to.redirect
