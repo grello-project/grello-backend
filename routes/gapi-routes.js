@@ -31,7 +31,7 @@ router.get('/gapi/auth', (req, res) => {
   res.redirect(url)
 })
 
-router.get('/gapi/auth/success', (req, res) => {
+router.get('/gapi/auth/success', (req, res, next) => {
   authenticateAndSaveUser(req.query.code)
   .then(user => {
     if (user.timesLoggedIn > 0) {
@@ -42,7 +42,7 @@ router.get('/gapi/auth/success', (req, res) => {
       return getFiles(user)
         .then(filesResults => {
           // TODO: get rid of this slice before going live!!!!
-          return Promise.all(filesResults.files.slice(0,3).map(file => {
+          return Promise.all(filesResults.files.slice(0,5).map(file => {
             return getTasks(file, user)
           }))
         })
@@ -53,5 +53,5 @@ router.get('/gapi/auth/success', (req, res) => {
   })
   .then(user => user.generateToken())
   .then(token => res.redirect(`${FRONTEND_URL}/#!/join?token=${token}`))
-  .catch(err => console.error(err))
+  .catch(next)
 })
