@@ -1,6 +1,5 @@
 'use strict'
 
-// const Task = require('../model/task')
 const Document = require('../model/document')
 const bearerAuth = require('../lib/bearer-auth-middleware')
 
