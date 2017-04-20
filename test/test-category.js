@@ -19,7 +19,8 @@ const mockUser = {
 }
 
 const mockCategory = {
-  name: 'test category'
+  name: 'test category',
+  priority: 1
 }
 
 const mockTask = {
@@ -195,7 +196,7 @@ describe('Testing Category Routes', function() {
           return this.tempTask.save()
         })
         .then(() => {
-          this.uncat = new Category({name: 'uncategorized', user: this.tempUser._id})
+          this.uncat = new Category({name: 'uncategorized', user: this.tempUser._id, priority: 1})
           return this.uncat.save()
         })
         .then(() => done())
