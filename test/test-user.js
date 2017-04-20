@@ -22,7 +22,7 @@ const mockTask = {
   comment: 'meow time! dogs suck!'
 }
 
-describe('testing task routes', function() {
+describe('testing user routes', function() {
   let server
 
   beforeEach(done => {
@@ -105,7 +105,6 @@ describe('testing task routes', function() {
       .get(`${API_URL}/api/users`)
       .set('Authorization', `Bearer ${this.tempUser.token}`)
       .end((err, res) => {
-        console.log('THIS IS THE REZ YO', res.body)
         expect(res.status).to.equal(200)
         expect(res.body.tokenTTL).to.not.exist
         done()
