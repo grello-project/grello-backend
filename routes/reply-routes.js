@@ -9,7 +9,7 @@ const router = module.exports = new Router()
 
 router.post('/api/resolve/:id', bearerAuth, (req, res, next) => {
   Task
-    .findOne(req.params.id)
+    .findById(req.params.id)
     .then( task => {
       if (!task) return Promise.reject(new Error('No task found to resolve'))
       return resolveTask(task, req.user)
