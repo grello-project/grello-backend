@@ -8,6 +8,7 @@ let userSchema = mongoose.Schema({
   name: {type: String, required: true, unique: true},
   email: {type: String, required: true},
   profilePic: String,
+  lastLogin: Date,
   refreshToken: String,
   accessToken: String,
   tokenTTL: Number,
@@ -17,11 +18,8 @@ let userSchema = mongoose.Schema({
 })
 
 userSchema.methods.generateToken = function() {
-  return new Promise ((resolve, reject) => {
+  return new Promise ((resolve) => {
     let token = jwt.sign({id: this._id}, process.env.SECRET || 'DEV')
-    if(!token) {
-      reject('could not generate token')
-    }
     resolve(token)
   })
 }

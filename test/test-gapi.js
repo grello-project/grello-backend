@@ -5,20 +5,22 @@ const expect = require('chai').expect
 
 const app = require('../index')
 const User = require('../model/user')
+const Document = require('../model/document')
+const Task = require('../model/task')
 
 const PORT = process.env.PORT || 3000
 const API_URL = process.env.API_URL || 'localhost:3000'
 
 const mockGoogleUser = {
-  googleID: 'test id',
+  id: 'test id',
   name: 'test google user',
   email: 'test@gmail.com',
   profilePic: 'testpic.png',
-  accessToken: 'testAccessToken',
-  refreshToken: 'testRefreshToken',
-  tokenTTL: 1,
-  tokenTimestamp: 1234,
   expiration: 1235,
+  tokens: {
+    access_token: 'testAccessToken',
+    refresh_token: 'testRefreshToken'
+  }
 }
 
 describe('testing gapi routes', function() {
@@ -32,6 +34,9 @@ describe('testing gapi routes', function() {
 
   after(done => {
     User.remove()
+    User.remove({})
+    .then(() => Document.remove({}))
+    .then(() => Task.remove({}))
     .then(() => {
       server.close(() => console.log('server closed after gapi tests'))
       done()
