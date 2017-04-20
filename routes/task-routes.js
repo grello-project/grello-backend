@@ -25,6 +25,10 @@ router.put('/api/tasks/:id', bearerAuth, (req, res, next) => {
   .catch(next)
 })
 
+router.put('/api/resolve', bearerAuth, (req, res, next) => {
+  
+})
+
 // this route will update our database with data from users drive
 router.put('/api/google/tasks', bearerAuth, refreshToken, (req, res, next) => {
   console.log('WE ARE IN THIS EXTERNAL SYNC ROUTE')
