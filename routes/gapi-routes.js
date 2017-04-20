@@ -18,8 +18,9 @@ let oauth2Client = require('../lib/oauth2Client')
 let scopes = [
   'openid',
   'email',
+  'profile',
   'https://www.googleapis.com/auth/plus.me',
-  'https://www.googleapis.com/auth/drive'
+  'https://www.googleapis.com/auth/drive',
 ]
 
 let url = oauth2Client.generateAuthUrl({
