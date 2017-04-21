@@ -50,8 +50,7 @@ describe('testing reply routes', function() {
     User.remove()
     .then(() => Task.remove())
     .then(() => {
-      server.close(() => console.log('server closed after reply tests'))
-      done()
+      server.close(done())
     })
     .catch(done)
   })
