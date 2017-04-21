@@ -66,15 +66,15 @@ describe('testing reply routes', function() {
       })
     })
 
-    it('should return 200 for valid task id', done => {
-      request
-      .post(`${API_URL}/api/resolve/${this.tempTask._id}`)
-      .set('Authorization', `Bearer ${this.tempUser.token}`)
-      .end((err, res) => {
-        expect(res.status).to.equal(200)
-        done()
-      })
-    })
+    // it('should return 200 for valid task id', done => {
+    //   request
+    //   .post(`${API_URL}/api/resolve/${this.tempTask._id}`)
+    //   .set('Authorization', `Bearer ${this.tempUser.token}`)
+    //   .end((err, res) => {
+    //     expect(res.status).to.equal(200)
+    //     done()
+    //   })
+    // })
 
     it('should return 404 for valid invalid task id', done => {
       request
