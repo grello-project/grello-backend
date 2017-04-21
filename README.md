@@ -1,98 +1,393 @@
+# Wattle Backend
+[![Build Status](https://travis-ci.org/grello-project/grello-backend.svg?branch=staging)](https://travis-ci.org/grello-project/grello-backend)
 
-# Wattle.io [backend]
+[Gitbook version of this documentation](https://wattle.gitbooks.io/wattle/content/)
 
-[![Coverage Status](https://coveralls.io/repos/github/grello-project/grello-backend/badge.svg?branch=staging)](https://coveralls.io/github/grello-project/grello-backend?branch=staging)
+An app that helps users easily organize and track tasks assigned to them in Google docs. Through OAuth, users are able to login using their Google credentials and have their assigned tasks populated into an uncategorized bucket. Users can then create new buckets with personalized categories, and drag and drop tasks into the appropriate buckets for easy organization.
 
-An app that helps users easily organize and track tasks assigned to them in Google docs. Through OAuth, users are able to login using their Google credentials and have their assigned tasks populated into an uncategorized bucket. Users can then create new buckets with personalized categories, and drag and drop tasks into the appropriate buckets for easy organization.  
+[Models](#models) | [OAuth](#oauth) | [Routes](#routes) | [Testing Framework](#testing-framework) | [The Wattle Team](#the-wattle-team)
+
+---
+
+# Models
+
+###### and their relationships
+![Models](https://cloud.githubusercontent.com/assets/13214336/25210560/52efe59e-2535-11e7-834a-ca1e843aa289.png)
+
+---
+
+# OAUTH
 
 
+> The authorization sequence begins when your application redirects a browser to a Google URL; the URL includes query parameters that indicate the type of access being requested. Google handles the user authentication, session selection, and user consent.
+>
+> The result is an access token, which the client should validate before including it in a Google API request. When the token expires, the application repeats the process<sup>1</sup>
 
-# Schemas Used
+![OAuth](https://cloud.githubusercontent.com/assets/13214336/25210628/a6f07758-2535-11e7-9143-5a6c7def2c6e.png)
 
-All data is stored using MongoDB in the backend of our Project
-
--Category: The different naming conventions used for each container, whether it be
- for different project names, or to assign urgency ratings for unassigned tasks.
-
--Document: googleID, name, array of tasks.
-
--Tag: Tags will identify properties on the comment object so that we can create custom filters.
-
--Task: All tasks to be completed.
-
--User: All users that have created accounts.
+###### 1. [OAuth Documentation](https://developers.google.com/identity/protocols/OAuth2)
+___
 
 # Routes
 
- ### GET/task
+[User](#user) | [Category](#category) | [Document](#document) | [Tasks](#tasks) | [Tags](#tags) | [Error Response](#error-response)
+___
+### **User**
 
- This will bring the user to the task view, where one can see the uncategorized tasks as well as the categories created.
- ```
-curl http://localhost:3000/users/task
+#### GET api/users
+
+**This route allows users to gain access to the app. Using OAuth, users sign in using their unique google sign-in credentials to gain access to the app**
+
+Expected Header:
+
+```
+"Content-Type": "application/json"
 ```
 
- ### PUT/task
+Example Response:
 
- This route will allow for updating tasks.
- ```
-curl -H "Authorization: Bearer <your token>" -H "Content-type: application/json" -d '{<information you want to update>}' -X PUT http://localhost:3000/api/task
+```
+{
+  "_id": "58f57a0774628d03a8def07c",
+  "googleID": "107174370104406884799",
+  "name": "Carolina",
+  "email": "cejac10@gmail.com",
+  "profilePic": "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50",
+  "accessToken": null,
+  "refreshToken": null,
+  "tokenTTL": 3600,
+  "tokenTimestamp": null,
+  "expiration": 1492486167.093,
+  "__v": 0
+}
 ```
 
- ### /categories
+#### DELETE api/users
 
- This route will show all categories created by the user.
- ```
-curl http://localhost:3000/api/categories
+**This route allows an authenticated user to delete their profile from the app. Upon success no body will be returned**
+
+Expected Header:
+
+```
+"Authorization": "Bearer <token>"
 ```
 
- ### /tags
+---
 
- This route will show the categories that each task is associated with.  
- ```
-curl http://localhost:3000/api/tags
+### **Category**
+
+#### POST api/categories
+
+**This route allows users to create new category buckets for easier organization of tasks. All tasks are initially placed in an 'uncategorized' category, and then can be dragged/dropped into newly made category buckets.**
+
+Expected Headers:
+
+```
+"Content-Type": "application/json"
+"Authorization": "Bearer <token>"
 ```
 
- ### /user
+Expected Body:
 
- The user that has signed up for the Google auth API.
- ```
-curl http://localhost:3000/api/user
+```
+{
+    "name": "<sring>",
+    "user": "user id"
+}
 ```
 
- ## OAUTH:
- The user is signed into Google already, and is using Google docs.  Next, permission is granted by the user allowing google to share their information with the Wattle app.  Then the Google OAuth API sends server code to the Wattle backend server.  The Wattle backend server then sends the code back to the OAuth API with their 'secret' included.  Then the Google OAuth API sends back an access token with the request token. Then a request, with the bearer authorization token in the header, is sent to the Google openid API, which will fetch a specific set of information about the user.  The user is then placed into the application's database, and can begin using Wattle.
+Expected Response:
 
- ![googleoauth](https://cloud.githubusercontent.com/assets/15117936/24738080/0a5ec518-1a48-11e7-88d0-f23e4ff22d75.jpg)
+```
+{
+  "__v": 0,
+  "name": "Today",
+  "user": "58f5a7cdc0fc830554454e9b",
+  "_id": "58f5a99abf992807e74929c2"
+}
+```
 
-# Deployment
+#### GET api/categories
 
-We used AWS CodeDeploy to launch the application.
+**This route will retrieve the user's existing categories**
 
-![aws-logo](https://cloud.githubusercontent.com/assets/15117936/24769034/cd01ae7a-1ab9-11e7-9e3a-6ef1c4b374e7.jpeg)
+Expected Headers:
 
-# Testing
+```
+"Authorization": "Bearer <token>"
+```
 
-Testing was done with Karma and Jasmine.
+Expected Response:
 
-![jasmine-and-karma](https://cloud.githubusercontent.com/assets/15117936/24769214/8d33e9e2-1aba-11e7-860c-9f645ae63606.png)
+```
+[
+  {
+    "_id": "58f5a7cdc0fc830554454e9c",
+    "name": "uncategorized",
+    "user": "58f5a7cdc0fc830554454e9b",
+    "__v": 0
+  },
+  {
+    "_id": "58f5ac2bbf992807e74929c4",
+    "name": "Today",
+    "user": "58f5a7cdc0fc830554454e9b",
+    "__v": 0
+  }
+]
+```
 
+#### PUT api/categories/:id
 
-# Meet the Team
+**This route allows the user to update the name of existing category buckets**
 
-<table style="width:100%">
-  <tr>
-    <th>Ron Dunphy</th>
-    <th>Kyle Winckler</th>
-    <th>Carolina Ceja</th>
-    <th>Dan Peters</th>
-    <th>Jessica Vasquez-Soltero</th>
-  </tr>
+Expected Headers:
 
-  <tr>
-    <td><img width="102" alt="ron" src="https://cloud.githubusercontent.com/assets/15117936/24783972/64cebe56-1b04-11e7-9356-6bac7d0291f7.png"></td>
-    <td><img width="90" alt="kyle" src="https://cloud.githubusercontent.com/assets/15117936/24783967/5a76c78c-1b04-11e7-9952-006769c44db0.png"></td>
-    <td><img width="100" alt="carolina" src="https://cloud.githubusercontent.com/assets/15117936/24783952/46ca6d88-1b04-11e7-80e5-e08710f8ed08.png"></td>
-    <td><img width="100" alt="dan" src="https://cloud.githubusercontent.com/assets/15117936/24783980/7417e1da-1b04-11e7-872d-5966a99a326d.png"></td>
-    <td><img width="100" alt="jessica" src="https://cloud.githubusercontent.com/assets/15117936/24783910/14cc8c44-1b04-11e7-90ff-d4f059799db3.png"></td>
-  </tr>
-</table>
+```
+"Authorization": "Bearer <token>"
+```
+
+Expected Body:
+
+```
+{
+    "name": "<string>",
+}
+```
+
+Expected Response:
+
+```
+[
+  {
+    "_id": "58f5a7cdc0fc830554454e9c",
+    "name": "uncategorized",
+    "user": "58f5a7cdc0fc830554454e9b",
+    "__v": 0
+  },
+  {
+    "_id": "58f5ac2bbf992807e74929c4",
+    "name": "Tomorrow",
+    "user": "58f5a7cdc0fc830554454e9b",
+    "__v": 0
+  }
+]
+```
+
+#### DELETE api/categories/:id
+
+**This route allows users to delete an existing category bucket. Upon success, no body will be returned**
+
+Expected Headers:
+
+```
+"Authorization": "Bearer <token>"
+```
+---
+### **Document**
+
+#### GET api/documents
+
+**This route grabs the documents from the user's Google docs drive, and returns the data onto the page.**
+
+Expected Header:
+
+```
+"Authorization": "Bearer <token>"
+```
+
+Expected Response:
+
+```
+[
+  {
+    "_id": "58f5a7cdc0fc830554454e9e",
+    "googleID": "1ep8bQ6ZjB68EsYqmo2wdSworXKxlSWwwalfXrgOe-lw",
+    "name": "Project",
+    "user": "58f5a7cdc0fc830554454e9b",
+    "link": "<document link>",
+    "__v": 0
+  }
+]
+```
+
+---
+
+### **Tasks**
+
+#### GET api/tasks
+
+**This route retrieves tasks assigned to the user to populate onto their profile.**
+
+Expected Headers:
+
+```
+"Authorization": "Bearer <token>"
+```
+
+Expected Response:
+
+```
+[
+  {
+    "_id": "58f5a7cdc0fc830554454e9d",
+    "googleID": "7b8df6e1-9ecf-4096-9e35-e35133e23c74",
+    "author": "system",
+    "category": {
+      "_id": "58f5a7cdc0fc830554454e9c",
+      "name": "uncategorized",
+      "user": "58f5a7cdc0fc830554454e9b",
+      "__v": 0
+    },
+    "userID": "58f5a7cdc0fc830554454e9b",
+    "comment": "placeholder",
+    "__v": 0,
+    "replies": []
+  },
+  {
+    "_id": "58f5a99abf992807e74929c3",
+    "googleID": "75afd317-f13a-43aa-84b7-62dea1e0550a",
+    "author": "system",
+    "category": {
+      "_id": "58f5a99abf992807e74929c2",
+      "name": "Friday",
+      "user": "58f57a0774628d03a8def07c",
+      "__v": 0
+    },
+    "userID": "58f5a7cdc0fc830554454e9b",
+    "comment": "placeholder",
+    "__v": 0,
+    "replies": []
+  }
+]
+```
+
+---
+
+### **Tags**
+
+#### POST api/tags
+
+**This route allows users to tag their tasks to fit their needs and even further organize their tasks**
+
+Expected Headers:
+
+```
+"Content-Type": "application/json"
+"Authorization": "Bearer <token>"
+```
+
+Expected Body:
+
+```
+{
+    "name": "<string>",
+    "user": "<user id>"
+}
+```
+
+Expected Response:
+
+```
+{
+  "__v": 0,
+  "name": "High",
+  "user": "58ea7c938091afefeb5e4080",
+  "_id": "58f6fedf9c37e70f42df9059"
+}
+```
+
+### GET api/tags
+
+**This route returns all tags created on a user's account**
+
+Expected Headers:
+
+```
+"Authorization": "Bearer <token>"
+```
+
+Expected Response:
+
+```
+[
+  {
+    "_id": "58f6fedf9c37e70f42df9059",
+    "name": "High",
+    "user": "58ea7c938091afefeb5e4080",
+    "__v": 0
+  }
+]
+```
+
+#### PUT api/tags/:id
+
+**This route allows the user to update the name of an existing tag**
+
+Expected Headers:
+
+```
+"Content-Type": "application/json"
+"Authorization": "Bearer <token>"
+```
+
+Expected Body:
+
+```
+{
+    "name": "<string>"
+}
+```
+
+Expected Response:
+
+```
+{
+  "_id": "58f6fedf9c37e70f42df9059",
+  "name": "Low",
+  "user": "58ea7c938091afefeb5e4080",
+  "__v": 0
+}
+```
+
+#### DELETE api/tags/:id
+
+**This route allows a user to delete existing tags from their profile. Upon success no body will be returned.**
+
+Expected Headers:
+
+```
+"Authorization": "Bearer <token>"
+```
+
+---
+
+### **Error Response**
+
+##### 200 - Success
+
+##### 204 - No Content \(Delete route was successful\)
+
+##### 400 - Bad Request
+
+##### 401 - Not Authorized
+
+##### 404 - Not Found
+
+##### 500 - Internal Server Error
+
+---
+
+# Testing Framework
+- Mocha
+- Chai (Expect)
+- Eslint
+- Travis
+- Coveralls
+
+---
+
+# The Wattle Team:
+
+| Ron Dunphy | Kyle Winckler | Carolina Ceja | Dan Peters | Jessica Vasquez-Soltero |
+| :--- | :--- | :--- | :--- | :--- |
+| [![](https://cloud.githubusercontent.com/assets/15117936/24783972/64cebe56-1b04-11e7-9356-6bac7d0291f7.png "ron")](https://cloud.githubusercontent.com/assets/15117936/24783972/64cebe56-1b04-11e7-9356-6bac7d0291f7.png) | [![](https://cloud.githubusercontent.com/assets/15117936/24783967/5a76c78c-1b04-11e7-9952-006769c44db0.png "kyle")](https://cloud.githubusercontent.com/assets/15117936/24783967/5a76c78c-1b04-11e7-9952-006769c44db0.png) | [![](https://cloud.githubusercontent.com/assets/15117936/24783952/46ca6d88-1b04-11e7-80e5-e08710f8ed08.png "carolina")](https://cloud.githubusercontent.com/assets/15117936/24783952/46ca6d88-1b04-11e7-80e5-e08710f8ed08.png) | [![](https://cloud.githubusercontent.com/assets/15117936/24783980/7417e1da-1b04-11e7-872d-5966a99a326d.png "dan")](https://cloud.githubusercontent.com/assets/15117936/24783980/7417e1da-1b04-11e7-872d-5966a99a326d.png) | [![](https://cloud.githubusercontent.com/assets/15117936/24783910/14cc8c44-1b04-11e7-90ff-d4f059799db3.png "jessica")](https://cloud.githubusercontent.com/assets/15117936/24783910/14cc8c44-1b04-11e7-90ff-d4f059799db3.png) |
