@@ -54,10 +54,10 @@ if (production) {
   morganLogs = morgan('combined', {stream: accessLogStream})
   // overriding console logging so it doesn't crash pm2
   console.log = function() {
-    accessDebugStream.write('log: ' + util.format.apply(null, arguments) + '\n')
+    accessDebugStream.write(Date().toString() + ' - log: ' + util.format.apply(null, arguments) + '\n')
   }
   console.error = function() {
-    accessDebugStream.write('error: ' + util.format.apply(null, arguments) + '\n')
+    accessDebugStream.write(Date().toString() + ' - error: ' + util.format.apply(null, arguments) + '\n')
   }
 } else {
   morganLogs = morgan('dev')

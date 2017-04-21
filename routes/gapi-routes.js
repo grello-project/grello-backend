@@ -1,6 +1,6 @@
 'use strict'
 
-const DELAY = 200
+const DELAY = process.env.RATE_THROTTLE
 
 const Router = require('express').Router
 const router = module.exports = new Router()
