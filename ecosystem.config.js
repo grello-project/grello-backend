@@ -17,7 +17,8 @@ module.exports = {
         API_URL: 'https://api.wattle.io',
         WATTLE_URL: 'https://wattle.io',
         DEBUG: '',
-        SECRET: ''
+        SECRET: '',
+        RATE_THROTTLE:10
       },
       env_production : {
         NODE_ENV: 'production',
